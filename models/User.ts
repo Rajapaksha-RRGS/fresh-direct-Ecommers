@@ -1,0 +1,70 @@
+import mongoose, { Document, Model, Schema } from "mongoose";
+
+// ─── TypeScript Interface ─────────────────────────────────────────────────────
+export interface IUser extends Document {
+  name: string;
+  email: string;
+  passwordHash: string;
+  phone?: string;
+  address?: string;
+  role: "CUSTOMER" | "FARMER" | "ADMIN";
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// ─── Schema ───────────────────────────────────────────────────────────────────
+const UserSchema = new Schema<IUser>(
+  {
+    name: {
+      type: String,
+      required: [true, "Name is required"],
+      trim: true,
+      minlength: 2,
+      maxlength: 100,
+    },
+    email: {
+      type: String,
+      required: [true, "Email is required"],
+      unique: true,
+      lowercase: true,
+      trim: true,
+      match: [/^\S+@\S+\.\S+$/, "Please provide a valid email"],
+    },
+    passwordHash: {
+      type: String,
+      required: [true, "Password is required"],
+      select: false, // Never return password in queries by default
+    },
+    phone: {
+      type: String,
+      trim: true,
+    },
+    address: {
+      type: String,
+      trim: true,
+    },
+    role: {
+      type: String,
+      enum: ["CUSTOMER", "FARMER", "ADMIN"],
+      default: "CUSTOMER",
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  {
+    timestamps: true, // Auto createdAt & updatedAt
+  }
+);
+
+// ─── Indexes ──────────────────────────────────────────────────────────────────
+UserSchema.index({ email: 1 });
+UserSchema.index({ role: 1 });
+
+// ─── Model ────────────────────────────────────────────────────────────────────
+const User: Model<IUser> =
+  mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
+
+export default User;
