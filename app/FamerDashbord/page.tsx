@@ -385,7 +385,7 @@ export default function FarmerDashboard() {
 
           <div className="flex items-center gap-2 ml-auto">
             {/* Stats quick peek */}
-            <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#2D6A4F]/08 border border-[rgba(208,237,216,0.5)]">
+            <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#2D6A4F]/10 border border-[rgba(208,237,216,0.5)]">
               <BarChart2 size={14} className="text-[#52B788]" />
               <span className="text-xs font-semibold text-[#2D6A4F]">April 2026</span>
             </div>
@@ -504,7 +504,7 @@ export default function FarmerDashboard() {
               </div>
               <div className="flex items-center gap-3">
                 <div className="text-center hidden sm:block">
-                  <p className="text-[#D0EDD8] text-xs">Today&apos;s Revenue</p>
+                  <p className="text-[#D0EDD8] text-xs">Today's Revenue</p>
                   <p className="text-white text-xl font-bold">Rs. 4,280</p>
                 </div>
                 <div className="w-px h-10 bg-white/20 hidden sm:block" />
