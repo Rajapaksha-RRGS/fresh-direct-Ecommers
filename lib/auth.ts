@@ -24,23 +24,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         await connectDB();
 
         // Find user by email
-        const user = await User.findOne({ email: credentials?.email }).select(
-          "+password",
+        const user = await User.findOne({ email: credentials?.email as string }).select(
+          "+passwordHash",
         );
 
         if (!user) {
           throw new Error("Invalid Email or Password");
         }
 
-        // Check if password exists
-        if (!user.password) {
+        // Check if passwordHash exists
+        if (!user.passwordHash) {
           throw new Error("Password not set");
         }
 
         // Compare passwords
         const isPasswordCorrect = await bcrypt.compare(
           credentials.password as string,
-          user.password,
+          user.passwordHash,
         );
 
         if (!isPasswordCorrect) {
@@ -83,6 +83,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   pages: {
-    signIn: "/Auth/login",
+    signIn: "/login",
+    error: "/login",
   },
 });
