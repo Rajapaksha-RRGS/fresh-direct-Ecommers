@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useCartStore } from "@/store/cartStore";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const totalItems = useCartStore((s) => s.totalItems());
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -74,6 +76,23 @@ export default function Navbar() {
 
         {/* CTA Buttons */}
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          {/* Cart icon */}
+          <Link href="/cart" id="nav-cart"
+            style={{ textDecoration: "none", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: "38px", height: "38px", borderRadius: "50%", background: totalItems > 0 ? "var(--color-mint)" : "transparent" }}>
+            <span style={{ fontSize: "1.2rem" }}>🛒</span>
+            {totalItems > 0 && (
+              <span style={{
+                position: "absolute", top: "-2px", right: "-2px",
+                background: "var(--color-forest)", color: "white",
+                borderRadius: "50%", width: "18px", height: "18px",
+                fontSize: "0.65rem", fontWeight: 800,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                border: "2px solid white",
+              }}>
+                {totalItems > 9 ? "9+" : totalItems}
+              </span>
+            )}
+          </Link>
           <Link
             href="/login"
             style={{

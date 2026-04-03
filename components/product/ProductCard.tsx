@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { useCartStore } from "@/store/cartStore";
 
 // ─── Types matching the Product Mongoose model ────────────────────────────────
 export interface ProductCardProps {
@@ -45,6 +47,14 @@ export default function ProductCard({
   const demandBadge = getDemandBadge(demandFactor);
   const priceChanged = currentPrice !== basePrice;
   const priceUp = currentPrice > basePrice;
+  const [added, setAdded] = useState(false);
+  const addItem = useCartStore((s) => s.addItem);
+
+  const handleAddToCart = () => {
+    addItem({ productId: id, name, imageUrl: image, unit, unitPrice: currentPrice });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+  };
 
   return (
     <article
@@ -113,9 +123,11 @@ export default function ProductCard({
         </div>
 
         {/* Product Name */}
-        <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 700, color: "var(--color-text-dark)", lineHeight: 1.3 }}>
-          {name}
-        </h3>
+        <Link href={`/products/${id}`} style={{ textDecoration: "none" }}>
+          <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 700, color: "var(--color-text-dark)", lineHeight: 1.3 }}>
+            {name}
+          </h3>
+        </Link>
 
         {/* Farmer Info — Links to FarmerProfile */}
         <Link
@@ -147,10 +159,13 @@ export default function ProductCard({
         {/* Add to Cart CTA */}
         <button
           id={`add-to-cart-${id}`}
+          onClick={handleAddToCart}
           style={{
             width: "100%",
             padding: "0.7rem",
-            background: "linear-gradient(135deg, var(--color-forest), #52B788)",
+            background: added
+              ? "linear-gradient(135deg, #52B788, #2D6A4F)"
+              : "linear-gradient(135deg, var(--color-forest), #52B788)",
             color: "white",
             border: "none",
             borderRadius: "12px",
@@ -169,7 +184,7 @@ export default function ProductCard({
             (e.currentTarget as HTMLElement).style.boxShadow = "none";
           }}
         >
-          Add to Cart 🛒
+          {added ? "✅ Added!" : "Add to Cart 🛒"}
         </button>
       </div>
     </article>
