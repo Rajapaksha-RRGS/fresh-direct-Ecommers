@@ -22,8 +22,8 @@ export interface ProductCardProps {
 
 function getDemandBadge(factor?: number) {
   if (!factor) return null;
-  if (factor >= 1.3) return { label: "🔥 High Demand", color: "#FF6B35", bg: "#FFF0EA" };
-  if (factor <= 0.8) return { label: "💚 Great Deal", color: "#2D6A4F", bg: "#D8F3DC" };
+  if (factor >= 1.3) return { label: "🔥 High Demand", color: "text-[#FF6B35]", bg: "bg-[#FFF0EA]" };
+  if (factor <= 0.8) return { label: "💚 Great Deal", color: "text-[#2D6A4F]", bg: "bg-[#D8F3DC]" };
   return null;
 }
 
@@ -49,44 +49,28 @@ export default function ProductCard({
   return (
     <article
       id={`product-card-${id}`}
-      style={{
-        background: "var(--color-white)",
-        borderRadius: "20px",
-        overflow: "hidden",
-        boxShadow: "var(--shadow-card)",
-        border: "1px solid var(--color-border)",
-        transition: "all 0.3s ease",
-        display: "flex",
-        flexDirection: "column",
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.transform = "translateY(-6px)";
-        (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-hover)";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-        (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-card)";
-      }}
+      className="group bg-white rounded-[22px] overflow-hidden shadow-[0_4px_20px_rgba(45,106,79,0.06)] border border-[#D0EDD8] transition-all duration-300 flex flex-col hover:-translate-y-2 hover:shadow-[0_16px_48px_rgba(45,106,79,0.16)]"
     >
       {/* Image Section */}
-      <div style={{ position: "relative", height: "200px", backgroundColor: "var(--color-mint-light)", overflow: "hidden" }}>
+      <div className="relative h-[210px] bg-[#F0FBF1] overflow-hidden">
         <img
           src={image}
           alt={name}
-          style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease" }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.06)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.08]"
         />
 
+        {/* Gradient overlay on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
         {/* Badges */}
-        <div style={{ position: "absolute", top: "12px", left: "12px", display: "flex", gap: "6px", flexDirection: "column" }}>
+        <div className="absolute top-3 left-3 flex gap-2 flex-col">
           {isOrganic && (
-            <span style={{ background: "#2D6A4F", color: "#fff", fontSize: "0.7rem", fontWeight: 700, padding: "3px 10px", borderRadius: "50px", letterSpacing: "0.05em" }}>
+            <span className="bg-[#2D6A4F] text-white text-[0.7rem] font-bold px-3 py-1 rounded-full tracking-[0.05em] shadow-sm">
               🌿 ORGANIC
             </span>
           )}
           {demandBadge && (
-            <span style={{ background: demandBadge.bg, color: demandBadge.color, fontSize: "0.7rem", fontWeight: 700, padding: "3px 10px", borderRadius: "50px" }}>
+            <span className={`${demandBadge.bg} ${demandBadge.color} text-[0.7rem] font-bold px-3 py-1 rounded-full shadow-sm`}>
               {demandBadge.label}
             </span>
           )}
@@ -94,51 +78,63 @@ export default function ProductCard({
 
         {/* Stock Warning */}
         {stockQty <= 5 && stockQty > 0 && (
-          <span style={{ position: "absolute", bottom: "10px", right: "10px", background: "rgba(255,107,53,0.9)", color: "#fff", fontSize: "0.7rem", fontWeight: 700, padding: "3px 10px", borderRadius: "50px" }}>
+          <span className="absolute bottom-3 right-3 bg-[rgba(255,107,53,0.92)] backdrop-blur-sm text-white text-[0.72rem] font-bold px-3 py-1 rounded-full shadow-sm">
             Only {stockQty} left!
           </span>
         )}
       </div>
 
       {/* Content */}
-      <div style={{ padding: "1.1rem 1.25rem", display: "flex", flexDirection: "column", gap: "0.7rem", flex: 1 }}>
+      <div className="p-6 flex flex-col gap-3.5 flex-1">
         {/* Category + Harvest */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--color-text-mid)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+        <div className="flex justify-between items-center">
+          <span className="text-[0.72rem] font-semibold text-[#2D6A4F] uppercase tracking-[0.1em] bg-[#F0FBF1] px-2.5 py-0.5 rounded-md">
             {category}
           </span>
-          <span style={{ fontSize: "0.72rem", color: "var(--color-text-light)", display: "flex", alignItems: "center", gap: "4px" }}>
+          <span className="text-[0.72rem] text-[#8FAF9A] flex items-center gap-1">
             🕐 {formatHarvestDate(harvestDate)}
           </span>
         </div>
 
         {/* Product Name */}
-        <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.1rem", fontWeight: 700, color: "var(--color-text-dark)", lineHeight: 1.3 }}>
+        <h3
+          className="text-[1.15rem] font-bold text-[#1A2E22] leading-snug m-0"
+          style={{ fontFamily: "var(--font-serif)" }}
+        >
           {name}
         </h3>
 
         {/* Farmer Info — Links to FarmerProfile */}
         <Link
           href={`/farmers/${farmerId}`}
-          style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "6px" }}
+          className="no-underline flex items-center gap-2 group/farmer"
         >
-          <div style={{ width: "22px", height: "22px", borderRadius: "50%", background: "var(--color-mint)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.75rem" }}>
+          <div className="w-[24px] h-[24px] rounded-full bg-[#D8F3DC] flex items-center justify-center text-[0.75rem] flex-shrink-0">
             👨‍🌾
           </div>
           <div>
-            <p style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--color-forest)", margin: 0 }}>{farmerName}</p>
-            <p style={{ fontSize: "0.7rem", color: "var(--color-text-light)", margin: 0 }}>📍 {farmLocation}</p>
+            <p className="text-[0.8rem] font-semibold text-[#2D6A4F] m-0 group-hover/farmer:text-[#1B4332] transition-colors">{farmerName}</p>
+            <p className="text-[0.72rem] text-[#8FAF9A] m-0">📍 {farmLocation}</p>
           </div>
         </Link>
 
         {/* Dynamic Price */}
-        <div style={{ display: "flex", alignItems: "flex-end", gap: "0.5rem", marginTop: "auto" }}>
-          <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", fontWeight: 800, color: "var(--color-forest)" }}>
+        <div className="flex items-end gap-2 mt-auto pt-2">
+          <span
+            className="text-[1.45rem] font-extrabold text-[#2D6A4F]"
+            style={{ fontFamily: "var(--font-serif)" }}
+          >
             Rs. {currentPrice.toFixed(2)}
           </span>
-          <span style={{ fontSize: "0.8rem", color: "var(--color-text-light)", marginBottom: "2px" }}>/ {unit}</span>
+          <span className="text-[0.8rem] text-[#8FAF9A] mb-0.5">/ {unit}</span>
           {priceChanged && (
-            <span style={{ fontSize: "0.72rem", color: priceUp ? "#FF6B35" : "#2D6A4F", background: priceUp ? "#FFF0EA" : "#D8F3DC", padding: "2px 8px", borderRadius: "50px", fontWeight: 700, marginBottom: "2px" }}>
+            <span
+              className={`text-[0.72rem] font-bold px-2 py-0.5 rounded-full mb-0.5 ${
+                priceUp
+                  ? "text-[#FF6B35] bg-[#FFF0EA]"
+                  : "text-[#2D6A4F] bg-[#D8F3DC]"
+              }`}
+            >
               {priceUp ? "▲" : "▼"} vs base
             </span>
           )}
@@ -147,27 +143,7 @@ export default function ProductCard({
         {/* Add to Cart CTA */}
         <button
           id={`add-to-cart-${id}`}
-          style={{
-            width: "100%",
-            padding: "0.7rem",
-            background: "linear-gradient(135deg, var(--color-forest), #52B788)",
-            color: "white",
-            border: "none",
-            borderRadius: "12px",
-            fontWeight: 700,
-            fontSize: "0.9rem",
-            cursor: "pointer",
-            transition: "all 0.25s ease",
-            letterSpacing: "0.02em",
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-            (e.currentTarget as HTMLElement).style.boxShadow = "0 6px 20px rgba(45,106,79,0.35)";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-            (e.currentTarget as HTMLElement).style.boxShadow = "none";
-          }}
+          className="w-full py-3.5 bg-gradient-to-r from-[#2D6A4F] to-[#52B788] text-white border-none rounded-xl font-bold text-[0.9rem] cursor-pointer transition-all duration-300 tracking-[0.02em] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(45,106,79,0.35)] active:translate-y-0"
         >
           Add to Cart 🛒
         </button>

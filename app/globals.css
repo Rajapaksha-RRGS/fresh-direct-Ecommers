@@ -3,33 +3,35 @@
 
 @import "tailwindcss";
 
-/* ─── Design Tokens ────────────────────────────────────────────────────────── */
-:root {
+/* ─── Tailwind v4 Theme Extension ──────────────────────────────────────────── */
+@theme {
   /* Colors */
-  --color-forest:      #2D6A4F;   /* Deep Forest Green — headers, nav */
-  --color-forest-dark: #1B4332;   /* Darker green — hover states */
-  --color-mint:        #D8F3DC;   /* Soft Mint — section backgrounds */
-  --color-mint-light:  #F0FBF1;   /* Lightest mint — card backgrounds */
-  --color-golden:      #FFB703;   /* Golden Yellow — CTAs */
-  --color-golden-dark: #E09F00;   /* Darker gold — CTA hover */
-  --color-white:       #FFFFFF;
-  --color-off-white:   #FAFFF8;   /* Slight green tint */
-  --color-text-dark:   #1A2E22;   /* Near-black for body text */
-  --color-text-mid:    #4A6355;   /* Muted green-grey */
-  --color-text-light:  #8FAF9A;   /* Light muted */
-  --color-border:      #D0EDD8;   /* Light green border */
+  --color-forest:       #2D6A4F;
+  --color-forest-dark:  #1B4332;
+  --color-forest-light: #52B788;
+  --color-mint:         #D8F3DC;
+  --color-mint-light:   #F0FBF1;
+  --color-golden:       #FFB703;
+  --color-golden-dark:  #E09F00;
+  --color-off-white:    #FAFFF8;
+  --color-text-dark:    #1A2E22;
+  --color-text-mid:     #4A6355;
+  --color-text-light:   #8FAF9A;
+  --color-border:       #D0EDD8;
 
-  /* Typography */
-  --font-serif:  "Playfair Display", Georgia, serif;
-  --font-sans:   "Inter", system-ui, sans-serif;
-
-  /* Spacing scale */
-  --section-py: 5rem;
+  /* Font Families */
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans:  "Inter", system-ui, sans-serif;
 
   /* Shadows */
   --shadow-card:  0 4px 24px rgba(45,106,79,0.08);
   --shadow-hover: 0 12px 40px rgba(45,106,79,0.18);
   --shadow-cta:   0 8px 30px rgba(255,183,3,0.35);
+
+  /* Animations */
+  --animate-fade-in-up: fadeInUp 0.7s ease forwards;
+  --animate-float-leaf: floatLeaf 4s ease-in-out infinite;
+  --animate-pulse-dot:  pulseDot 2s ease-in-out infinite;
 }
 
 /* ─── Base Reset ───────────────────────────────────────────────────────────── */
@@ -42,15 +44,18 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-white);
+  background-color: #ffffff;
   color: var(--color-text-dark);
   line-height: 1.7;
   overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ─── Typography Utilities ─────────────────────────────────────────────────── */
-.font-serif  { font-family: var(--font-serif); }
-.font-sans   { font-family: var(--font-sans); }
+/* Ensure main content stretches */
+body > main,
+body > div { flex: 1; }
 
 /* ─── Smooth Transitions ───────────────────────────────────────────────────── */
 a, button { transition: all 0.25s ease; }
@@ -59,6 +64,47 @@ a, button { transition: all 0.25s ease; }
 ::-webkit-scrollbar       { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--color-mint); }
 ::-webkit-scrollbar-thumb { background: var(--color-forest); border-radius: 10px; }
+
+/* ─── Section Heading System ───────────────────────────────────────────────── */
+.section-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  display: inline-block;
+  margin-bottom: 0.75rem;
+}
+.section-heading {
+  font-family: var(--font-serif);
+  font-weight: 800;
+  color: var(--color-text-dark);
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+.section-subtitle {
+  font-size: 0.95rem;
+  color: var(--color-text-mid);
+  line-height: 1.7;
+  margin-top: 0.5rem;
+}
+
+/* ─── Container Utility ────────────────────────────────────────────────────── */
+.container-wide {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  width: 100%;
+}
+.container-narrow {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  width: 100%;
+}
 
 /* ─── Keyframe Animations ──────────────────────────────────────────────────── */
 @keyframes fadeInUp {
@@ -76,18 +122,60 @@ a, button { transition: all 0.25s ease; }
   50%       { transform: scale(1.3); opacity: 0.7; }
 }
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
 
-/* ─── Animation Classes ────────────────────────────────────────────────────── */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ─── Animation Utility Classes ────────────────────────────────────────────── */
 .animate-fade-in-up  { animation: fadeInUp 0.7s ease forwards; }
 .animate-float-leaf  { animation: floatLeaf 4s ease-in-out infinite; }
 .animate-pulse-dot   { animation: pulseDot 2s ease-in-out infinite; }
+.animate-spin-slow   { animation: spin 0.7s linear infinite; }
+.animate-shimmer     { animation: shimmer 2s ease-in-out infinite; background-size: 200% 100%; }
+.animate-slide-right { animation: slideInRight 0.6s ease forwards; }
+.animate-scale-in    { animation: scaleIn 0.5s ease forwards; }
 
 .delay-100 { animation-delay: 0.1s; }
 .delay-200 { animation-delay: 0.2s; }
 .delay-300 { animation-delay: 0.3s; }
 .delay-400 { animation-delay: 0.4s; }
 .delay-500 { animation-delay: 0.5s; }
+
+/* ─── Glass Card ───────────────────────────────────────────────────────────── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(208, 237, 216, 0.5);
+  border-radius: 20px;
+}
+
+/* ─── Line Clamp Utility ───────────────────────────────────────────────────── */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ─── Focus Visible ────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-forest);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

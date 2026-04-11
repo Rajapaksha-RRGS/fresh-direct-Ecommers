@@ -93,190 +93,224 @@ export default function HomePage() {
         {/* ── 1. HERO SECTION ─────────────────────────────────────────────── */}
         <section
           id="hero"
-          style={{
-            minHeight: "100vh",
-            background: "linear-gradient(160deg, #F0FBF1 0%, #D8F3DC 40%, #B7E4C7 100%)",
-            display: "flex",
-            alignItems: "center",
-            padding: "7rem 1.5rem 4rem",
-            position: "relative",
-            overflow: "hidden",
-          }}
+          className="min-h-screen bg-gradient-to-br from-[#F0FBF1] via-[#D8F3DC] to-[#B7E4C7] flex items-center pt-28 pb-20 px-6 relative overflow-hidden"
         >
           {/* Decorative floating leaves */}
           {["🍃", "🌿", "🍂", "🌱"].map((leaf, i) => (
             <span
               key={i}
-              className="animate-float-leaf"
+              className="animate-float-leaf absolute select-none pointer-events-none"
               style={{
-                position: "absolute",
                 fontSize: `${1.5 + i * 0.5}rem`,
-                opacity: 0.25,
+                opacity: 0.2,
                 top: `${15 + i * 18}%`,
                 right: `${5 + i * 4}%`,
                 animationDelay: `${i * 0.8}s`,
-                userSelect: "none",
               }}
             >
               {leaf}
             </span>
           ))}
 
-          <div style={{ maxWidth: "1280px", margin: "0 auto", width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
-            {/* Left: Text */}
-            <div className="animate-fade-in-up">
-              {/* Live badge */}
-              <div style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", background: "white", border: "1px solid var(--color-border)", borderRadius: "50px", padding: "0.4rem 1rem", marginBottom: "1.5rem", boxShadow: "var(--shadow-card)" }}>
-                <span className="animate-pulse-dot" style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#22C55E", display: "inline-block" }} />
-                <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--color-forest)" }}>Live Marketplace — 1,240 products fresh today</span>
-              </div>
+          {/* Subtle radial gradient overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(ellipse 60% 50% at 30% 40%, rgba(255,183,3,0.06), transparent)",
+            }}
+          />
 
-              <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2.4rem, 5vw, 3.8rem)", fontWeight: 800, lineHeight: 1.15, color: "var(--color-forest-dark)", marginBottom: "1.25rem" }}>
-                Harvested Today,<br />
-                <span style={{ color: "var(--color-golden)", WebkitTextStroke: "0px" }}>On Your Table</span>{" "}
-                Tomorrow
-              </h1>
+          <div className="container-wide">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+              {/* Left: Text */}
+              <div className="animate-fade-in-up">
+                {/* Live badge */}
+                <div className="inline-flex items-center gap-2.5 bg-white/90 backdrop-blur-sm border border-[#D0EDD8] rounded-full px-5 py-2 mb-8 shadow-[0_4px_24px_rgba(45,106,79,0.08)]">
+                  <span className="animate-pulse-dot w-2.5 h-2.5 rounded-full bg-[#22C55E] inline-block" />
+                  <span className="text-[0.82rem] font-semibold text-[#2D6A4F] tracking-[0.01em]">
+                    Live Marketplace — 1,240 products fresh today
+                  </span>
+                </div>
 
-              <p style={{ fontSize: "1.1rem", color: "var(--color-text-mid)", lineHeight: 1.8, maxWidth: "480px", marginBottom: "2rem" }}>
-                Connect directly with <strong>500+ verified Sri Lankan farmers</strong>. Skip the middleman — get chemical-free, garden-fresh produce at fair prices, delivered in 24 hours.
-              </p>
-
-              {/* CTAs */}
-              <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginBottom: "2.5rem" }}>
-                <Link
-                  href="/products"
-                  id="hero-shop-cta"
-                  style={{
-                    textDecoration: "none",
-                    background: "var(--color-golden)",
-                    color: "#1A2E22",
-                    fontWeight: 800,
-                    fontSize: "1rem",
-                    padding: "0.9rem 2.2rem",
-                    borderRadius: "50px",
-                    boxShadow: "var(--shadow-cta)",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    transition: "all 0.25s ease",
-                  }}
+                <h1
+                  className="text-[clamp(2.4rem,5vw,3.8rem)] font-extrabold leading-[1.12] text-[#1B4332] mb-6"
+                  style={{ fontFamily: "var(--font-serif)" }}
                 >
-                  Shop Fresh Now 🛒
-                </Link>
-                <Link
-                  href="/farmers"
-                  id="hero-farmers-cta"
-                  style={{
-                    textDecoration: "none",
-                    background: "transparent",
-                    color: "var(--color-forest)",
-                    fontWeight: 700,
-                    fontSize: "1rem",
-                    padding: "0.9rem 2rem",
-                    borderRadius: "50px",
-                    border: "2px solid var(--color-forest)",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
-                  Meet Our Farmers 👨‍🌾
-                </Link>
-              </div>
+                  Harvested Today,
+                  <br />
+                  <span className="text-[#FFB703] relative">
+                    On Your Table
+                    <span className="absolute -bottom-1 left-0 w-full h-[3px] rounded-full bg-[#FFB703]/30" />
+                  </span>{" "}
+                  Tomorrow
+                </h1>
 
-              {/* Mini trust signals */}
-              <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
-                {["✅ No Middlemen", "🌿 Chemical-Free", "⚡ 24h Delivery"].map((item) => (
-                  <span key={item} style={{ fontSize: "0.85rem", color: "var(--color-text-mid)", fontWeight: 500 }}>{item}</span>
-                ))}
-              </div>
-            </div>
+                <p className="text-[1.1rem] text-[#4A6355] leading-[1.85] max-w-[500px] mb-10">
+                  Connect directly with{" "}
+                  <strong className="text-[#2D6A4F]">
+                    500+ verified Sri Lankan farmers
+                  </strong>
+                  . Skip the middleman — get chemical-free, garden-fresh produce
+                  at fair prices, delivered in 24 hours.
+                </p>
 
-            {/* Right: Hero visual card */}
-            <div className="animate-fade-in-up delay-300" style={{ position: "relative" }}>
-              <div style={{ borderRadius: "28px", overflow: "hidden", boxShadow: "0 30px 80px rgba(45,106,79,0.25)", aspectRatio: "4/3", position: "relative" }}>
-                <img
-                  src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=700&h=525&fit=crop"
-                  alt="Fresh vegetables from Sri Lankan farm"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-                {/* Floating price card */}
-                <div style={{
-                  position: "absolute", bottom: "1.5rem", left: "1.5rem",
-                  background: "rgba(255,255,255,0.95)", backdropFilter: "blur(10px)",
-                  borderRadius: "16px", padding: "0.9rem 1.2rem",
-                  boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
-                  display: "flex", alignItems: "center", gap: "0.75rem",
-                }}>
-                  <span style={{ fontSize: "2rem" }}>🥬</span>
-                  <div>
-                    <p style={{ fontWeight: 800, fontSize: "0.95rem", color: "var(--color-text-dark)", margin: 0 }}>Baby Leeks</p>
-                    <p style={{ fontSize: "0.75rem", color: "var(--color-text-light)", margin: 0 }}>🕐 Harvested 2h ago</p>
-                    <p style={{ fontWeight: 800, fontSize: "1rem", color: "var(--color-forest)", margin: 0 }}>Rs. 180 <span style={{ fontSize: "0.75rem", color: "var(--color-text-light)", fontWeight: 400 }}>/ bunch</span></p>
-                  </div>
+                {/* CTAs */}
+                <div className="flex gap-4 flex-wrap mb-12">
+                  <Link
+                    href="/products"
+                    id="hero-shop-cta"
+                    className="no-underline bg-[#FFB703] text-[#1A2E22] font-extrabold text-base px-9 py-4 rounded-full shadow-[0_8px_30px_rgba(255,183,3,0.35)] inline-flex items-center gap-2.5 hover:bg-[#E09F00] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(255,183,3,0.45)] transition-all duration-200 active:translate-y-0"
+                  >
+                    Shop Fresh Now 🛒
+                  </Link>
+                  <Link
+                    href="/farmers"
+                    id="hero-farmers-cta"
+                    className="no-underline bg-transparent text-[#2D6A4F] font-bold text-base px-8 py-4 rounded-full border-2 border-[#2D6A4F] inline-flex items-center gap-2 hover:bg-[#2D6A4F] hover:text-white hover:-translate-y-0.5 transition-all duration-200"
+                  >
+                    Meet Our Farmers 👨‍🌾
+                  </Link>
+                </div>
+
+                {/* Mini trust signals */}
+                <div className="flex gap-8 flex-wrap">
+                  {[
+                    "✅ No Middlemen",
+                    "🌿 Chemical-Free",
+                    "⚡ 24h Delivery",
+                  ].map((item) => (
+                    <span
+                      key={item}
+                      className="text-[0.85rem] text-[#4A6355] font-medium"
+                    >
+                      {item}
+                    </span>
+                  ))}
                 </div>
               </div>
 
-              {/* Floating stats pill */}
-              <div style={{
-                position: "absolute", top: "-1rem", right: "-1rem",
-                background: "var(--color-golden)", borderRadius: "16px",
-                padding: "0.75rem 1.25rem", boxShadow: "var(--shadow-cta)",
-                textAlign: "center",
-              }}>
-                <p style={{ fontFamily: "var(--font-serif)", fontWeight: 800, fontSize: "1.5rem", color: "#1A2E22", margin: 0 }}>500+</p>
-                <p style={{ fontSize: "0.72rem", fontWeight: 700, color: "#1A2E22", margin: 0 }}>Verified Farmers</p>
+              {/* Right: Hero visual card */}
+              <div className="animate-fade-in-up delay-300 relative">
+                <div className="rounded-[28px] overflow-hidden shadow-[0_30px_80px_rgba(45,106,79,0.22)] aspect-[4/3] relative">
+                  <img
+                    src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=700&h=525&fit=crop"
+                    alt="Fresh vegetables from Sri Lankan farm"
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Floating price card */}
+                  <div className="absolute bottom-6 left-6 glass-card px-5 py-4 shadow-[0_8px_30px_rgba(0,0,0,0.12)] flex items-center gap-3.5">
+                    <span className="text-[2rem]">🥬</span>
+                    <div>
+                      <p className="font-extrabold text-[0.95rem] text-[#1A2E22] m-0">
+                        Baby Leeks
+                      </p>
+                      <p className="text-[0.75rem] text-[#8FAF9A] m-0 mt-0.5">
+                        🕐 Harvested 2h ago
+                      </p>
+                      <p className="font-extrabold text-[1.05rem] text-[#2D6A4F] m-0 mt-1">
+                        Rs. 180{" "}
+                        <span className="text-[0.75rem] text-[#8FAF9A] font-normal">
+                          / bunch
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating stats pill */}
+                <div className="absolute -top-3 -right-3 bg-[#FFB703] rounded-2xl px-5 py-3.5 shadow-[0_8px_30px_rgba(255,183,3,0.35)] text-center">
+                  <p
+                    className="font-extrabold text-2xl text-[#1A2E22] m-0"
+                    style={{ fontFamily: "var(--font-serif)" }}
+                  >
+                    500+
+                  </p>
+                  <p className="text-[0.72rem] font-bold text-[#1A2E22]/80 m-0 mt-0.5">
+                    Verified Farmers
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* ── 2. PROBLEM / SOLUTION ───────────────────────────────────────── */}
-        <section id="problem-solution" style={{ padding: "5rem 1.5rem", background: "var(--color-white)" }}>
-          <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-            <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
-              <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--color-forest)", textTransform: "uppercase", letterSpacing: "0.12em" }}>The Problem</span>
-              <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", fontWeight: 800, color: "var(--color-text-dark)", marginTop: "0.5rem" }}>
-                Your Supermarket Produce Traveled Further<br />Than You Did Last Month
+        <section id="problem-solution" className="py-24 px-6 bg-white">
+          <div className="container-narrow">
+            <div className="text-center mb-16">
+              <span className="section-label text-[#2D6A4F]">The Problem</span>
+              <h2
+                className="section-heading text-[clamp(1.8rem,3.5vw,2.8rem)]"
+                style={{ fontFamily: "var(--font-serif)" }}
+              >
+                Your Supermarket Produce Traveled{" "}
+                <br className="hidden sm:block" />
+                Further Than You Did Last Month
               </h2>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: "2rem", alignItems: "center" }}>
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 items-stretch">
               {/* Old Way */}
-              <div style={{ background: "#FFF5F5", border: "2px solid #FFD0D0", borderRadius: "20px", padding: "2rem" }}>
-                <h3 style={{ fontWeight: 800, color: "#C53030", fontSize: "1.05rem", marginBottom: "1.25rem" }}>❌ Traditional Supermarket</h3>
+              <div className="bg-[#FFF5F5] border-2 border-[#FFD0D0] rounded-[24px] p-8 lg:p-10">
+                <h3 className="font-extrabold text-[#C53030] text-[1.1rem] mb-6 flex items-center gap-2">
+                  <span className="w-8 h-8 rounded-full bg-[#FED7D7] flex items-center justify-center text-sm">
+                    ❌
+                  </span>
+                  Traditional Supermarket
+                </h3>
                 {[
                   "Farmer → Collector → Wholesale → Distributor → Supermarket → You",
                   "5–7 days old produce by the time it reaches you",
                   "Pesticides & wax coatings to extend shelf life",
                   "Farmer earns only 20% of what you pay",
                 ].map((item) => (
-                  <div key={item} style={{ display: "flex", gap: "0.6rem", marginBottom: "0.75rem", alignItems: "flex-start" }}>
-                    <span style={{ color: "#FC8181", flexShrink: 0, marginTop: "2px" }}>✗</span>
-                    <p style={{ fontSize: "0.88rem", color: "#744210", margin: 0, lineHeight: 1.5 }}>{item}</p>
+                  <div key={item} className="flex gap-3 mb-4 items-start">
+                    <span className="text-[#FC8181] flex-shrink-0 mt-1 text-[0.9rem]">
+                      ✗
+                    </span>
+                    <p className="text-[0.9rem] text-[#744210] m-0 leading-[1.7]">
+                      {item}
+                    </p>
                   </div>
                 ))}
               </div>
 
               {/* VS divider */}
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem" }}>
-                <div style={{ width: "1px", height: "60px", background: "var(--color-border)" }} />
-                <span style={{ fontFamily: "var(--font-serif)", fontWeight: 800, fontSize: "1.2rem", color: "var(--color-text-light)", padding: "0.5rem 0.75rem", border: "1px solid var(--color-border)", borderRadius: "50%" }}>VS</span>
-                <div style={{ width: "1px", height: "60px", background: "var(--color-border)" }} />
+              <div className="flex md:flex-col items-center gap-2 justify-center py-4 md:py-0">
+                <div className="hidden md:block w-px h-16 bg-gradient-to-b from-transparent via-[#D0EDD8] to-transparent" />
+                <div className="md:hidden h-px w-16 bg-gradient-to-r from-transparent via-[#D0EDD8] to-transparent" />
+                <span
+                  className="font-extrabold text-[1.1rem] text-[#8FAF9A] px-4 py-2.5 border-2 border-[#D0EDD8] rounded-full bg-white"
+                  style={{ fontFamily: "var(--font-serif)" }}
+                >
+                  VS
+                </span>
+                <div className="hidden md:block w-px h-16 bg-gradient-to-b from-transparent via-[#D0EDD8] to-transparent" />
+                <div className="md:hidden h-px w-16 bg-gradient-to-r from-transparent via-[#D0EDD8] to-transparent" />
               </div>
 
               {/* Fresh Direct Way */}
-              <div style={{ background: "var(--color-mint-light)", border: "2px solid var(--color-border)", borderRadius: "20px", padding: "2rem" }}>
-                <h3 style={{ fontWeight: 800, color: "var(--color-forest)", fontSize: "1.05rem", marginBottom: "1.25rem" }}>✅ Fresh Direct Way</h3>
+              <div className="bg-[#F0FBF1] border-2 border-[#D0EDD8] rounded-[24px] p-8 lg:p-10">
+                <h3 className="font-extrabold text-[#2D6A4F] text-[1.1rem] mb-6 flex items-center gap-2">
+                  <span className="w-8 h-8 rounded-full bg-[#D8F3DC] flex items-center justify-center text-sm">
+                    ✅
+                  </span>
+                  Fresh Direct Way
+                </h3>
                 {[
                   "Farmer → You (Direct!). Two steps, maximum freshness.",
                   "Harvested today, delivered to your door within 24 hours",
                   "100% chemical-free, naturally grown produce",
                   "Farmer earns up to 80% of what you pay — fair & transparent",
                 ].map((item) => (
-                  <div key={item} style={{ display: "flex", gap: "0.6rem", marginBottom: "0.75rem", alignItems: "flex-start" }}>
-                    <span style={{ color: "var(--color-forest)", flexShrink: 0, marginTop: "2px" }}>✓</span>
-                    <p style={{ fontSize: "0.88rem", color: "var(--color-text-mid)", margin: 0, lineHeight: 1.5 }}>{item}</p>
+                  <div key={item} className="flex gap-3 mb-4 items-start">
+                    <span className="text-[#2D6A4F] flex-shrink-0 mt-1 text-[0.9rem]">
+                      ✓
+                    </span>
+                    <p className="text-[0.9rem] text-[#4A6355] m-0 leading-[1.7]">
+                      {item}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -285,60 +319,87 @@ export default function HomePage() {
         </section>
 
         {/* ── 3. TRUST BAR / STATS ────────────────────────────────────────── */}
-        <section id="trust-bar" style={{ background: "linear-gradient(135deg, var(--color-forest), var(--color-forest-dark))", padding: "4rem 1.5rem" }}>
-          <div style={{ maxWidth: "900px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "2rem", textAlign: "center" }}>
-            {STATS.map((s) => (
-              <div key={s.label}>
-                <div style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>{s.icon}</div>
-                <div style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, color: "var(--color-golden)", lineHeight: 1 }}>
-                  {s.value}
+        <section
+          id="trust-bar"
+          className="bg-gradient-to-br from-[#2D6A4F] to-[#1B4332] py-20 px-6 relative overflow-hidden"
+        >
+          {/* Subtle pattern overlay */}
+          <div
+            className="absolute inset-0 opacity-[0.04]"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle, #fff 1px, transparent 1px)",
+              backgroundSize: "24px 24px",
+            }}
+          />
+
+          <div className="container-narrow relative z-[1]">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-10 text-center">
+              {STATS.map((s) => (
+                <div key={s.label} className="group">
+                  <div className="text-[2.5rem] mb-3 transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-1">
+                    {s.icon}
+                  </div>
+                  <div
+                    className="text-[clamp(2rem,4vw,3rem)] font-extrabold text-[#FFB703] leading-none"
+                    style={{ fontFamily: "var(--font-serif)" }}
+                  >
+                    {s.value}
+                  </div>
+                  <div className="text-[0.9rem] text-white/70 mt-2 font-medium tracking-[0.02em]">
+                    {s.label}
+                  </div>
                 </div>
-                <div style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.75)", marginTop: "0.4rem", fontWeight: 500 }}>
-                  {s.label}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
 
         {/* ── 4. HOW IT WORKS ─────────────────────────────────────────────── */}
-        <section id="how-it-works" style={{ padding: "5rem 1.5rem", background: "var(--color-off-white)" }}>
-          <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-            <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
-              <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--color-golden)", textTransform: "uppercase", letterSpacing: "0.12em" }}>Simple Process</span>
-              <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)", fontWeight: 800, color: "var(--color-text-dark)", marginTop: "0.5rem" }}>
+        <section id="how-it-works" className="py-24 px-6 bg-[#FAFFF8]">
+          <div className="container-narrow">
+            <div className="text-center mb-16">
+              <span className="section-label text-[#FFB703]">
+                Simple Process
+              </span>
+              <h2
+                className="section-heading text-[clamp(1.8rem,3.5vw,2.6rem)]"
+                style={{ fontFamily: "var(--font-serif)" }}
+              >
                 From Field to Fork in 3 Simple Steps
               </h2>
+              <p className="section-subtitle max-w-[520px] mx-auto">
+                We&apos;ve made it effortless to get the freshest produce
+                straight from the farm to your kitchen.
+              </p>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "2rem", position: "relative" }}>
-              {/* Connecting line */}
-              <div style={{ position: "absolute", top: "3.5rem", left: "calc(16.67% + 2rem)", right: "calc(16.67% + 2rem)", height: "2px", background: "var(--color-border)", zIndex: 0 }} />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+              {/* Connecting line (desktop only) */}
+              <div className="hidden md:block absolute top-[4.5rem] left-[calc(16.67%+2rem)] right-[calc(16.67%+2rem)] h-[2px] bg-gradient-to-r from-[#D0EDD8] via-[#52B788] to-[#D0EDD8] z-0 opacity-60" />
 
               {STEPS.map((step, i) => (
                 <div
                   key={step.num}
                   id={`step-${i + 1}`}
-                  style={{
-                    background: "white",
-                    borderRadius: "24px",
-                    padding: "2rem",
-                    textAlign: "center",
-                    boxShadow: "var(--shadow-card)",
-                    border: "1px solid var(--color-border)",
-                    position: "relative",
-                    zIndex: 1,
-                  }}
+                  className="bg-white rounded-3xl p-8 lg:p-10 text-center shadow-[0_4px_24px_rgba(45,106,79,0.06)] border border-[#D0EDD8] relative z-[1] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(45,106,79,0.14)]"
                 >
-                  {/* Step number */}
-                  <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "56px", height: "56px", borderRadius: "50%", background: "var(--color-forest)", color: "white", fontWeight: 800, fontSize: "1.1rem", marginBottom: "1.25rem", position: "relative" }}>
-                    <span style={{ fontSize: "1.6rem" }}>{step.icon}</span>
-                    <span style={{ position: "absolute", top: "-8px", right: "-8px", background: "var(--color-golden)", color: "#1A2E22", fontSize: "0.65rem", fontWeight: 800, width: "22px", height: "22px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {/* Step icon */}
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[#2D6A4F] to-[#52B788] text-white font-extrabold text-[1.1rem] mb-6 relative shadow-[0_6px_20px_rgba(45,106,79,0.25)]">
+                    <span className="text-[1.8rem]">{step.icon}</span>
+                    <span className="absolute -top-2 -right-2 bg-[#FFB703] text-[#1A2E22] text-[0.65rem] font-extrabold w-[24px] h-[24px] rounded-full flex items-center justify-center shadow-sm">
                       {step.num}
                     </span>
                   </div>
-                  <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.2rem", fontWeight: 700, color: "var(--color-text-dark)", marginBottom: "0.75rem" }}>{step.title}</h3>
-                  <p style={{ fontSize: "0.88rem", color: "var(--color-text-mid)", lineHeight: 1.7 }}>{step.desc}</p>
+                  <h3
+                    className="text-[1.25rem] font-bold text-[#1A2E22] mb-3"
+                    style={{ fontFamily: "var(--font-serif)" }}
+                  >
+                    {step.title}
+                  </h3>
+                  <p className="text-[0.9rem] text-[#4A6355] leading-[1.75] m-0">
+                    {step.desc}
+                  </p>
                 </div>
               ))}
             </div>
@@ -346,35 +407,33 @@ export default function HomePage() {
         </section>
 
         {/* ── 5. FEATURED MARKETPLACE ─────────────────────────────────────── */}
-        <section id="marketplace" style={{ padding: "5rem 1.5rem", background: "var(--color-white)" }}>
-          <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "2.5rem", flexWrap: "wrap", gap: "1rem" }}>
+        <section id="marketplace" className="py-24 px-6 bg-white">
+          <div className="container-wide">
+            <div className="flex justify-between items-end mb-12 flex-wrap gap-6">
               <div>
-                <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--color-forest)", textTransform: "uppercase", letterSpacing: "0.12em" }}>Live Marketplace</span>
-                <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 800, color: "var(--color-text-dark)", marginTop: "0.4rem" }}>
+                <span className="section-label text-[#2D6A4F]">
+                  Live Marketplace
+                </span>
+                <h2
+                  className="section-heading text-[clamp(1.8rem,3vw,2.4rem)]"
+                  style={{ fontFamily: "var(--font-serif)" }}
+                >
                   Fresh From the Fields Today
                 </h2>
-                <p style={{ fontSize: "0.9rem", color: "var(--color-text-mid)", marginTop: "0.25rem" }}>Prices update dynamically based on real-time demand</p>
+                <p className="section-subtitle mt-2">
+                  Prices update dynamically based on real-time demand
+                </p>
               </div>
               <Link
                 href="/products"
                 id="see-all-products"
-                style={{
-                  textDecoration: "none",
-                  fontWeight: 700,
-                  fontSize: "0.9rem",
-                  color: "var(--color-forest)",
-                  border: "2px solid var(--color-forest)",
-                  padding: "0.6rem 1.5rem",
-                  borderRadius: "50px",
-                  whiteSpace: "nowrap",
-                }}
+                className="no-underline font-bold text-[0.9rem] text-[#2D6A4F] border-2 border-[#2D6A4F] px-7 py-3 rounded-full whitespace-nowrap hover:bg-[#2D6A4F] hover:text-white hover:-translate-y-0.5 transition-all duration-200"
               >
                 See All Products →
               </Link>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem" }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
               {FEATURED_PRODUCTS.map((product) => (
                 <ProductCard key={product.id} {...product} />
               ))}
@@ -383,64 +442,103 @@ export default function HomePage() {
         </section>
 
         {/* ── 6. FARMER OF THE MONTH SPOTLIGHT ────────────────────────────── */}
-        <section id="farmer-spotlight" style={{ padding: "5rem 1.5rem", background: "var(--color-mint)" }}>
-          <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-            <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-              <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--color-golden)", textTransform: "uppercase", letterSpacing: "0.12em" }}>🏆 Farmer Spotlight</span>
-              <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)", fontWeight: 800, color: "var(--color-forest-dark)", marginTop: "0.5rem" }}>
+        <section
+          id="farmer-spotlight"
+          className="py-24 px-6 bg-gradient-to-b from-[#D8F3DC] to-[#E8F5E9]"
+        >
+          <div className="container-narrow">
+            <div className="text-center mb-14">
+              <span className="section-label text-[#FFB703]">
+                🏆 Farmer Spotlight
+              </span>
+              <h2
+                className="section-heading text-[clamp(1.8rem,3.5vw,2.6rem)] text-[#1B4332]"
+                style={{ fontFamily: "var(--font-serif)" }}
+              >
                 Farmer of the Month
               </h2>
-              <p style={{ color: "var(--color-text-mid)", marginTop: "0.5rem" }}>Meet the dedicated growers behind your food</p>
+              <p className="section-subtitle">
+                Meet the dedicated growers behind your food
+              </p>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", alignItems: "center", background: "white", borderRadius: "28px", overflow: "hidden", boxShadow: "var(--shadow-hover)" }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0 items-stretch bg-white rounded-[28px] overflow-hidden shadow-[0_20px_60px_rgba(45,106,79,0.15)]">
               {/* Photo side */}
-              <div style={{ position: "relative", height: "460px" }}>
+              <div className="relative min-h-[400px] md:min-h-[460px]">
                 <img
                   src="https://images.unsplash.com/photo-1589923188900-85dae523342b?w=600&h=460&fit=crop"
                   alt="Farmer Nimal Perera at Green Hills Farm, Nuwara Eliya"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  className="w-full h-full object-cover absolute inset-0"
                 />
                 {/* Overlay badge */}
-                <div style={{ position: "absolute", bottom: "1.5rem", left: "1.5rem", background: "rgba(255,183,3,0.95)", borderRadius: "14px", padding: "0.7rem 1.2rem" }}>
-                  <p style={{ fontWeight: 800, fontSize: "0.85rem", color: "#1A2E22", margin: 0 }}>🏆 Farmer of the Month</p>
-                  <p style={{ fontSize: "0.75rem", color: "#1A2E22", margin: 0, opacity: 0.8 }}>April 2026</p>
+                <div className="absolute bottom-6 left-6 bg-[rgba(255,183,3,0.95)] backdrop-blur-sm rounded-2xl px-5 py-3">
+                  <p className="font-extrabold text-[0.85rem] text-[#1A2E22] m-0">
+                    🏆 Farmer of the Month
+                  </p>
+                  <p className="text-[0.75rem] text-[#1A2E22]/70 m-0 mt-0.5">
+                    April 2026
+                  </p>
                 </div>
               </div>
 
               {/* Content side */}
-              <div style={{ padding: "2.5rem" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "0.5rem" }}>
-                  <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.8rem", fontWeight: 800, color: "var(--color-forest-dark)" }}>
+              <div className="p-8 lg:p-12 flex flex-col justify-center">
+                <div className="flex items-center gap-3 mb-1">
+                  <h3
+                    className="text-[1.8rem] font-extrabold text-[#1B4332] m-0"
+                    style={{ fontFamily: "var(--font-serif)" }}
+                  >
                     {FEATURED_FARMER.farmerName}
                   </h3>
-                  <span style={{ background: "var(--color-forest)", color: "white", borderRadius: "50%", width: "24px", height: "24px", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "0.75rem", flexShrink: 0 }}>✓</span>
+                  <span className="bg-[#2D6A4F] text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-[0.75rem] flex-shrink-0">
+                    ✓
+                  </span>
                 </div>
-                <p style={{ color: "var(--color-golden)", fontWeight: 700, fontSize: "0.95rem", marginBottom: "0.25rem" }}>{FEATURED_FARMER.farmName}</p>
-                <p style={{ color: "var(--color-text-light)", fontSize: "0.85rem", marginBottom: "1.25rem" }}>📍 {FEATURED_FARMER.location}</p>
+                <p className="text-[#FFB703] font-bold text-[0.95rem] mb-1 mt-1">
+                  {FEATURED_FARMER.farmName}
+                </p>
+                <p className="text-[#8FAF9A] text-[0.85rem] mb-6">
+                  📍 {FEATURED_FARMER.location}
+                </p>
 
-                <p style={{ color: "var(--color-text-mid)", lineHeight: 1.8, fontSize: "0.95rem", marginBottom: "1.5rem" }}>
+                <p className="text-[#4A6355] leading-[1.85] text-[0.95rem] mb-8 m-0">
                   {FEATURED_FARMER.bio}
                 </p>
 
                 {/* Stats */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1.75rem" }}>
+                <div className="grid grid-cols-3 gap-4 mb-8">
                   {[
-                    { val: `${FEATURED_FARMER.productCount}`, label: "Products" },
+                    {
+                      val: `${FEATURED_FARMER.productCount}`,
+                      label: "Products",
+                    },
                     { val: `${FEATURED_FARMER.rating}★`, label: "Rating" },
                     { val: `${FEATURED_FARMER.reviewCount}`, label: "Reviews" },
                   ].map((s) => (
-                    <div key={s.label} style={{ textAlign: "center", padding: "0.75rem", background: "var(--color-mint-light)", borderRadius: "12px" }}>
-                      <p style={{ fontFamily: "var(--font-serif)", fontWeight: 800, fontSize: "1.3rem", color: "var(--color-forest)", margin: 0 }}>{s.val}</p>
-                      <p style={{ fontSize: "0.75rem", color: "var(--color-text-light)", margin: 0 }}>{s.label}</p>
+                    <div
+                      key={s.label}
+                      className="text-center py-3.5 px-2 bg-[#F0FBF1] rounded-xl border border-[#D0EDD8]"
+                    >
+                      <p
+                        className="font-extrabold text-[1.3rem] text-[#2D6A4F] m-0"
+                        style={{ fontFamily: "var(--font-serif)" }}
+                      >
+                        {s.val}
+                      </p>
+                      <p className="text-[0.75rem] text-[#8FAF9A] m-0 mt-1">
+                        {s.label}
+                      </p>
                     </div>
                   ))}
                 </div>
 
                 {/* Certifications */}
-                <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1.75rem" }}>
+                <div className="flex gap-2 flex-wrap mb-8">
                   {FEATURED_FARMER.certifications.map((cert) => (
-                    <span key={cert} style={{ fontSize: "0.78rem", background: "var(--color-mint)", color: "var(--color-forest)", padding: "4px 12px", borderRadius: "50px", fontWeight: 600 }}>
+                    <span
+                      key={cert}
+                      className="text-[0.78rem] bg-[#D8F3DC] text-[#2D6A4F] px-3.5 py-1.5 rounded-full font-semibold"
+                    >
                       {cert}
                     </span>
                   ))}
@@ -449,18 +547,7 @@ export default function HomePage() {
                 <Link
                   href={`/farmers/${FEATURED_FARMER.id}`}
                   id="view-spotlight-farmer"
-                  style={{
-                    textDecoration: "none",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    background: "var(--color-forest)",
-                    color: "white",
-                    fontWeight: 700,
-                    fontSize: "0.95rem",
-                    padding: "0.85rem 2rem",
-                    borderRadius: "50px",
-                  }}
+                  className="no-underline inline-flex items-center gap-2 bg-[#2D6A4F] text-white font-bold text-[0.95rem] px-8 py-3.5 rounded-full hover:bg-[#1B4332] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(45,106,79,0.3)] transition-all duration-200 self-start"
                 >
                   Visit Farm Profile →
                 </Link>
@@ -470,61 +557,68 @@ export default function HomePage() {
         </section>
 
         {/* ── 7. SOCIAL PROOF / REVIEWS ───────────────────────────────────── */}
-        <section id="reviews" style={{ padding: "5rem 1.5rem", background: "var(--color-white)" }}>
-          <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-            <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-              <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--color-forest)", textTransform: "uppercase", letterSpacing: "0.12em" }}>Social Proof</span>
-              <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)", fontWeight: 800, color: "var(--color-text-dark)", marginTop: "0.5rem" }}>
+        <section id="reviews" className="py-24 px-6 bg-white">
+          <div className="container-narrow">
+            <div className="text-center mb-14">
+              <span className="section-label text-[#2D6A4F]">Social Proof</span>
+              <h2
+                className="section-heading text-[clamp(1.8rem,3.5vw,2.6rem)]"
+                style={{ fontFamily: "var(--font-serif)" }}
+              >
                 10,000+ Families Choose Fresh Direct
               </h2>
-              <div style={{ display: "flex", justifyContent: "center", gap: "0.25rem", marginTop: "0.75rem", fontSize: "1.3rem" }}>
+              <div className="flex justify-center gap-1 mt-4 text-[1.3rem]">
                 {"⭐⭐⭐⭐⭐"}
               </div>
-              <p style={{ color: "var(--color-text-light)", fontSize: "0.88rem", marginTop: "0.25rem" }}>4.9 / 5 average from 3,200+ reviews</p>
+              <p className="text-[#8FAF9A] text-[0.88rem] mt-2">
+                4.9 / 5 average from 3,200+ reviews
+              </p>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem" }}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
               {REVIEWS.map((review) => (
                 <div
                   key={review.id}
                   id={`review-${review.id}`}
-                  style={{
-                    background: "var(--color-off-white)",
-                    borderRadius: "20px",
-                    padding: "1.75rem",
-                    border: "1px solid var(--color-border)",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1rem",
-                    position: "relative",
-                  }}
+                  className="bg-[#FAFFF8] rounded-[24px] p-8 border border-[#D0EDD8] flex flex-col gap-5 relative transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_40px_rgba(45,106,79,0.12)]"
                 >
                   {/* Quote mark */}
-                  <span style={{ position: "absolute", top: "1rem", right: "1.25rem", fontFamily: "var(--font-serif)", fontSize: "4rem", color: "var(--color-border)", lineHeight: 1, userSelect: "none" }}>&ldquo;</span>
+                  <span
+                    className="absolute top-5 right-6 text-[4rem] text-[#D0EDD8] leading-none select-none pointer-events-none"
+                    style={{ fontFamily: "var(--font-serif)" }}
+                  >
+                    &ldquo;
+                  </span>
 
                   {/* Stars */}
-                  <div style={{ fontSize: "1rem" }}>{"⭐".repeat(review.rating)}</div>
+                  <div className="text-base">{"⭐".repeat(review.rating)}</div>
 
                   {/* Review text */}
-                  <p style={{ fontSize: "0.9rem", color: "var(--color-text-mid)", lineHeight: 1.7, margin: 0, position: "relative", zIndex: 1 }}>
+                  <p className="text-[0.92rem] text-[#4A6355] leading-[1.75] m-0 relative z-[1]">
                     &ldquo;{review.text}&rdquo;
                   </p>
 
                   {/* Product reference */}
-                  <div style={{ background: "var(--color-mint)", borderRadius: "8px", padding: "0.5rem 0.75rem" }}>
-                    <p style={{ fontSize: "0.75rem", color: "var(--color-forest)", fontWeight: 600, margin: 0 }}>🌿 {review.product}</p>
+                  <div className="bg-[#D8F3DC] rounded-xl px-4 py-2.5">
+                    <p className="text-[0.78rem] text-[#2D6A4F] font-semibold m-0">
+                      🌿 {review.product}
+                    </p>
                   </div>
 
                   {/* Reviewer */}
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                  <div className="flex items-center gap-3.5 mt-auto">
                     <img
                       src={review.avatar}
                       alt={review.name}
-                      style={{ width: "42px", height: "42px", borderRadius: "50%", objectFit: "cover", border: "2px solid var(--color-mint)" }}
+                      className="w-[44px] h-[44px] rounded-full object-cover border-[3px] border-[#D8F3DC]"
                     />
                     <div>
-                      <p style={{ fontWeight: 700, fontSize: "0.88rem", color: "var(--color-text-dark)", margin: 0 }}>{review.name}</p>
-                      <p style={{ fontSize: "0.75rem", color: "var(--color-text-light)", margin: 0 }}>📍 {review.location}</p>
+                      <p className="font-bold text-[0.88rem] text-[#1A2E22] m-0">
+                        {review.name}
+                      </p>
+                      <p className="text-[0.78rem] text-[#8FAF9A] m-0 mt-0.5">
+                        📍 {review.location}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -534,44 +628,39 @@ export default function HomePage() {
         </section>
 
         {/* ── 8. FINAL CTA BANNER ─────────────────────────────────────────── */}
-        <section id="cta-banner" style={{ padding: "5rem 1.5rem", background: "linear-gradient(135deg, var(--color-forest-dark), var(--color-forest))", textAlign: "center" }}>
-          <div style={{ maxWidth: "700px", margin: "0 auto" }}>
-            <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, color: "white", marginBottom: "1rem", lineHeight: 1.2 }}>
+        <section
+          id="cta-banner"
+          className="py-24 px-6 bg-gradient-to-br from-[#1B4332] via-[#2D6A4F] to-[#1B4332] text-center relative overflow-hidden"
+        >
+          {/* Decorative circles */}
+          <div className="absolute top-[-80px] left-[-80px] w-[280px] h-[280px] rounded-full bg-[#52B788]/10 pointer-events-none" />
+          <div className="absolute bottom-[-60px] right-[-60px] w-[220px] h-[220px] rounded-full bg-[#FFB703]/10 pointer-events-none" />
+
+          <div className="max-w-[700px] mx-auto relative z-[1]">
+            <h2
+              className="text-[clamp(2rem,4vw,3rem)] font-extrabold text-white mb-6 leading-[1.2]"
+              style={{ fontFamily: "var(--font-serif)" }}
+            >
               Ready to Taste the Difference?
             </h2>
-            <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "1.05rem", marginBottom: "2.5rem", lineHeight: 1.7 }}>
-              Join 10,000+ Sri Lankan families already enjoying farm-fresh produce.<br />Your first box ships free!
+            <p className="text-white/75 text-[1.05rem] mb-12 leading-[1.75]">
+              Join 10,000+ Sri Lankan families already enjoying farm-fresh
+              produce.
+              <br />
+              Your first box ships free!
             </p>
-            <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+            <div className="flex gap-4 justify-center flex-wrap">
               <Link
                 href="/register"
                 id="final-register-cta"
-                style={{
-                  textDecoration: "none",
-                  background: "var(--color-golden)",
-                  color: "#1A2E22",
-                  fontWeight: 800,
-                  fontSize: "1.05rem",
-                  padding: "1rem 2.5rem",
-                  borderRadius: "50px",
-                  boxShadow: "var(--shadow-cta)",
-                }}
+                className="no-underline bg-[#FFB703] text-[#1A2E22] font-extrabold text-[1.05rem] px-10 py-4 rounded-full shadow-[0_8px_30px_rgba(255,183,3,0.35)] hover:bg-[#E09F00] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(255,183,3,0.45)] transition-all duration-200"
               >
                 Get Started Free 🚀
               </Link>
               <Link
                 href="/products"
                 id="final-browse-cta"
-                style={{
-                  textDecoration: "none",
-                  background: "transparent",
-                  color: "white",
-                  fontWeight: 700,
-                  fontSize: "1.05rem",
-                  padding: "1rem 2.5rem",
-                  borderRadius: "50px",
-                  border: "2px solid rgba(255,255,255,0.4)",
-                }}
+                className="no-underline bg-transparent text-white font-bold text-[1.05rem] px-10 py-4 rounded-full border-2 border-white/40 hover:bg-white/10 hover:border-white/60 transition-all duration-200"
               >
                 Browse Products
               </Link>
@@ -580,32 +669,61 @@ export default function HomePage() {
         </section>
 
         {/* ── FOOTER ──────────────────────────────────────────────────────── */}
-        <footer style={{ background: "var(--color-forest-dark)", padding: "3rem 1.5rem 1.5rem", color: "rgba(255,255,255,0.65)" }}>
-          <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: "3rem", marginBottom: "2.5rem" }}>
+        <footer className="bg-[#1B4332] pt-16 pb-8 px-6 text-white/65">
+          <div className="container-wide">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-12 mb-12">
               {/* Brand */}
               <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
-                  <span style={{ fontSize: "1.5rem" }}>🌿</span>
-                  <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.2rem", fontWeight: 700, color: "white" }}>
-                    Fresh<span style={{ color: "var(--color-golden)" }}>Direct</span>
+                <div className="flex items-center gap-2.5 mb-4">
+                  <span className="text-2xl">🌿</span>
+                  <span
+                    className="text-[1.3rem] font-bold text-white"
+                    style={{ fontFamily: "var(--font-serif)" }}
+                  >
+                    Fresh<span className="text-[#FFB703]">Direct</span>
                   </span>
                 </div>
-                <p style={{ fontSize: "0.85rem", lineHeight: 1.7, maxWidth: "260px" }}>
-                  Connecting Sri Lankan farmers directly with families who care about what they eat.
+                <p className="text-[0.88rem] leading-[1.75] max-w-[280px]">
+                  Connecting Sri Lankan farmers directly with families who care
+                  about what they eat.
                 </p>
               </div>
               {[
-                { heading: "Marketplace", links: ["All Products", "Vegetables", "Fruits", "Herbs", "Grains"] },
-                { heading: "Farmers", links: ["Join as Farmer", "Farmer Dashboard", "Success Stories", "Certification"] },
-                { heading: "Company", links: ["About Us", "How It Works", "Blog", "Contact"] },
+                {
+                  heading: "Marketplace",
+                  links: [
+                    "All Products",
+                    "Vegetables",
+                    "Fruits",
+                    "Herbs",
+                    "Grains",
+                  ],
+                },
+                {
+                  heading: "Farmers",
+                  links: [
+                    "Join as Farmer",
+                    "Farmer Dashboard",
+                    "Success Stories",
+                    "Certification",
+                  ],
+                },
+                {
+                  heading: "Company",
+                  links: ["About Us", "How It Works", "Blog", "Contact"],
+                },
               ].map((col) => (
                 <div key={col.heading}>
-                  <h4 style={{ color: "white", fontWeight: 700, fontSize: "0.9rem", marginBottom: "1rem" }}>{col.heading}</h4>
-                  <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                  <h4 className="text-white font-bold text-[0.92rem] mb-5 tracking-[0.02em]">
+                    {col.heading}
+                  </h4>
+                  <ul className="list-none flex flex-col gap-3">
                     {col.links.map((link) => (
                       <li key={link}>
-                        <Link href="#" style={{ textDecoration: "none", fontSize: "0.85rem", color: "rgba(255,255,255,0.6)", transition: "color 0.2s" }}>
+                        <Link
+                          href="#"
+                          className="no-underline text-[0.88rem] text-white/55 hover:text-white hover:translate-x-1 transition-all duration-200 inline-block"
+                        >
                           {link}
                         </Link>
                       </li>
@@ -614,12 +732,22 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "1.25rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
-              <p style={{ fontSize: "0.8rem" }}>© 2026 Fresh Direct. Made with 💚 in Sri Lanka</p>
-              <div style={{ display: "flex", gap: "1.5rem" }}>
-                {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((item) => (
-                  <Link key={item} href="#" style={{ textDecoration: "none", fontSize: "0.8rem", color: "rgba(255,255,255,0.5)" }}>{item}</Link>
-                ))}
+            <div className="border-t border-white/10 pt-6 flex justify-between items-center flex-wrap gap-4">
+              <p className="text-[0.82rem] text-white/40">
+                © 2026 Fresh Direct. Made with 💚 in Sri Lanka
+              </p>
+              <div className="flex gap-6">
+                {["Privacy Policy", "Terms of Service", "Cookie Policy"].map(
+                  (item) => (
+                    <Link
+                      key={item}
+                      href="#"
+                      className="no-underline text-[0.82rem] text-white/40 hover:text-white/70 transition-colors duration-200"
+                    >
+                      {item}
+                    </Link>
+                  ),
+                )}
               </div>
             </div>
           </div>

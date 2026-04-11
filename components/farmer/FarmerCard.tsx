@@ -25,79 +25,61 @@ export default function FarmerCard({
   return (
     <article
       id={`farmer-card-${id}`}
-      style={{
-        background: "var(--color-white)",
-        borderRadius: "24px",
-        padding: "1.75rem",
-        boxShadow: "var(--shadow-card)",
-        border: "1px solid var(--color-border)",
-        transition: "all 0.3s ease",
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.transform = "translateY(-6px)";
-        (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-hover)";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-        (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-card)";
-      }}
+      className="group bg-white rounded-[24px] p-7 lg:p-8 shadow-[0_4px_20px_rgba(45,106,79,0.06)] border border-[#D0EDD8] transition-all duration-300 flex flex-col gap-5 hover:-translate-y-2 hover:shadow-[0_16px_48px_rgba(45,106,79,0.16)]"
     >
       {/* Header */}
-      <div style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}>
-        <div style={{ position: "relative", flexShrink: 0 }}>
+      <div className="flex gap-4 items-start">
+        <div className="relative flex-shrink-0">
           <img
             src={image}
             alt={farmerName}
-            style={{ width: "68px", height: "68px", borderRadius: "50%", objectFit: "cover", border: "3px solid var(--color-mint)" }}
+            className="w-[72px] h-[72px] rounded-full object-cover border-[3px] border-[#D8F3DC] transition-all duration-300 group-hover:border-[#52B788]"
           />
           {isVerified && (
-            <span style={{
-              position: "absolute", bottom: 0, right: -2,
-              background: "var(--color-forest)", color: "#fff",
-              borderRadius: "50%", width: "20px", height: "20px",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "0.65rem", border: "2px solid white",
-            }}>
+            <span className="absolute bottom-0 -right-0.5 bg-[#2D6A4F] text-white rounded-full w-5 h-5 flex items-center justify-center text-[0.65rem] border-2 border-white shadow-sm">
               ✓
             </span>
           )}
         </div>
-        <div style={{ flex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-            <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.05rem", fontWeight: 700, color: "var(--color-text-dark)" }}>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h3
+              className="text-[1.08rem] font-bold text-[#1A2E22] m-0"
+              style={{ fontFamily: "var(--font-serif)" }}
+            >
               {farmerName}
             </h3>
             {isVerified && (
-              <span style={{ fontSize: "0.68rem", background: "#D8F3DC", color: "#2D6A4F", padding: "1px 8px", borderRadius: "50px", fontWeight: 700 }}>
+              <span className="text-[0.68rem] bg-[#D8F3DC] text-[#2D6A4F] px-2.5 py-0.5 rounded-full font-bold whitespace-nowrap">
                 Verified
               </span>
             )}
           </div>
-          <p style={{ fontSize: "0.82rem", color: "var(--color-forest)", fontWeight: 600, margin: "2px 0" }}>{farmName}</p>
-          <p style={{ fontSize: "0.78rem", color: "var(--color-text-light)" }}>📍 {location}</p>
+          <p className="text-[0.85rem] text-[#2D6A4F] font-semibold mt-1 m-0">{farmName}</p>
+          <p className="text-[0.78rem] text-[#8FAF9A] m-0 mt-0.5">📍 {location}</p>
         </div>
       </div>
 
       {/* Rating */}
-      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-        <span style={{ fontSize: "0.85rem" }}>{stars}</span>
-        <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--color-text-dark)" }}>{rating.toFixed(1)}</span>
-        <span style={{ fontSize: "0.75rem", color: "var(--color-text-light)" }}>({reviewCount} reviews)</span>
+      <div className="flex items-center gap-2.5">
+        <span className="text-[0.85rem]">{stars}</span>
+        <span className="text-[0.82rem] font-bold text-[#1A2E22]">{rating.toFixed(1)}</span>
+        <span className="text-[0.75rem] text-[#8FAF9A]">({reviewCount} reviews)</span>
       </div>
 
       {/* Bio */}
-      <p style={{ fontSize: "0.85rem", color: "var(--color-text-mid)", lineHeight: 1.6, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+      <p className="text-[0.88rem] text-[#4A6355] leading-[1.7] line-clamp-2 m-0">
         {bio}
       </p>
 
       {/* Certifications */}
       {certifications.length > 0 && (
-        <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+        <div className="flex gap-2 flex-wrap">
           {certifications.slice(0, 3).map((cert) => (
-            <span key={cert} style={{ fontSize: "0.7rem", background: "var(--color-mint)", color: "var(--color-forest)", padding: "3px 10px", borderRadius: "50px", fontWeight: 600 }}>
+            <span
+              key={cert}
+              className="text-[0.72rem] bg-[#D8F3DC] text-[#2D6A4F] px-3 py-1 rounded-full font-semibold"
+            >
               {cert}
             </span>
           ))}
@@ -105,31 +87,14 @@ export default function FarmerCard({
       )}
 
       {/* Footer */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "0.5rem", borderTop: "1px solid var(--color-border)" }}>
-        <span style={{ fontSize: "0.8rem", color: "var(--color-text-mid)" }}>
-          🌾 <strong>{productCount}</strong> products
+      <div className="flex justify-between items-center pt-4 border-t border-[#D0EDD8] mt-auto">
+        <span className="text-[0.82rem] text-[#4A6355]">
+          🌾 <strong className="text-[#1A2E22]">{productCount}</strong> products
         </span>
         <Link
           href={`/farmers/${id}`}
           id={`view-farmer-${id}`}
-          style={{
-            textDecoration: "none",
-            fontSize: "0.85rem",
-            fontWeight: 700,
-            color: "var(--color-forest)",
-            border: "2px solid var(--color-forest)",
-            padding: "0.4rem 1rem",
-            borderRadius: "50px",
-            transition: "all 0.25s ease",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "var(--color-forest)";
-            e.currentTarget.style.color = "white";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "var(--color-forest)";
-          }}
+          className="no-underline text-[0.85rem] font-bold text-[#2D6A4F] border-2 border-[#2D6A4F] px-5 py-2 rounded-full transition-all duration-200 hover:bg-[#2D6A4F] hover:text-white hover:-translate-y-0.5"
         >
           View Profile →
         </Link>
