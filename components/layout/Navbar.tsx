@@ -38,7 +38,7 @@ export default function Navbar() {
             : "bg-transparent py-4"
         }`}
       >
-        <div className="container-wide h-full flex items-center justify-between">
+        <div className="max-w-[1280px] mx-auto px-6 w-full h-full flex items-center justify-between">
           {/* Logo */}
           <Link
             href="/"
@@ -72,7 +72,7 @@ export default function Navbar() {
           </div>
 
           {/* CTA Buttons + Hamburger */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 border-amber-600">
             <Link
               href="/login"
               className="no-underline text-[#2D6A4F] font-semibold text-[0.95rem] px-7 py-3.5 rounded-lg hover:bg-[#F0FBF1] hover:text-[#1B4332] transition-all duration-200 hidden sm:block"

@@ -258,7 +258,7 @@ export default function HomePage() {
             }}
           />
 
-          <div className="container-wide">
+          <div className="max-w-[1280px] mx-auto px-6 w-full">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               {/* Left — Text content */}
               <div className="animate-fade-in-up">
@@ -293,7 +293,7 @@ export default function HomePage() {
                 </p>
 
                 {/* CTAs */}
-                <div className="flex gap-4 flex-wrap mb-12">
+                <div className="flex gap-10  flex-wrap mt-7 mb-12 p-6 ">
                   <Link
                     href="/products"
                     id="hero-shop-cta"
@@ -311,17 +311,19 @@ export default function HomePage() {
                 </div>
 
                 {/* Mini trust signals */}
-                <div className="flex gap-8 flex-wrap">
-                  {["✅ No Middlemen", "🌿 Chemical-Free", "⚡ 24h Delivery"].map(
-                    (item) => (
-                      <span
-                        key={item}
-                        className="text-[0.85rem] text-[#4A6355] font-medium"
-                      >
-                        {item}
-                      </span>
-                    ),
-                  )}
+                <div className="flex gap-8 flex-wrap mt-12">
+                  {[
+                    "✅ No Middlemen",
+                    "🌿 Chemical-Free",
+                    "⚡ 24h Delivery",
+                  ].map((item) => (
+                    <span
+                      key={item}
+                      className="text-[0.85rem] text-[#4A6355] font-medium"
+                    >
+                      {item}
+                    </span>
+                  ))}
                 </div>
               </div>
 
@@ -334,7 +336,7 @@ export default function HomePage() {
                     className="w-full h-full object-cover"
                   />
                   {/* Floating price card */}
-                  <div className="absolute bottom-6 left-6 glass-card px-5 py-4 shadow-[0_8px_30px_rgba(0,0,0,0.12)] flex items-center gap-3.5">
+                  <div className="absolute bottom-6 left-6 bg-white/85 backdrop-blur-[16px] border border-[#D0EDD8]/50 rounded-[20px] px-5 py-4 shadow-[0_8px_30px_rgba(0,0,0,0.12)] flex items-center gap-3.5">
                     <span className="text-[2rem]">🥬</span>
                     <div>
                       <p className="font-extrabold text-[0.95rem] text-[#1A2E22] m-0">
@@ -374,11 +376,11 @@ export default function HomePage() {
             SECTION 2 — PROBLEM vs SOLUTION
         ───────────────────────────────────────────────────────────────────── */}
         <section id="problem-solution" className="py-28 px-6 bg-white">
-          <div className="container-narrow">
+          <div className="max-w-[1100px] mx-auto px-6 pb-[20px] flex w-full">
             <div className="text-center mb-16">
-              <span className="section-label text-[#2D6A4F]">The Problem</span>
+                  <span className="text-[0.8rem] font-bold uppercase tracking-[0.14em] inline-block mb-3 text-[#2D6A4F]">The Problem</span>
               <h2
-                className="section-heading text-[clamp(1.8rem,3.5vw,2.8rem)]"
+                className="font-serif font-extrabold text-[#1A2E22] leading-[1.2] mb-2 text-[clamp(1.8rem,3.5vw,2.8rem)]"
                 style={{ fontFamily: "var(--font-serif)" }}
               >
                 Your Supermarket Produce Traveled{" "}
@@ -387,7 +389,7 @@ export default function HomePage() {
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 items-stretch">
+            <div className="grid grid-cols-1 mt-16 md:grid-cols-[1fr_auto_1fr] gap-8 items-stretch">
               {/* Old Way */}
               <div className="bg-[#FFF5F5] border-2 border-[#FFD0D0] rounded-[24px] p-8 lg:p-10">
                 <h3 className="font-extrabold text-[#C53030] text-[1.1rem] mb-6 flex items-center gap-2">
@@ -472,7 +474,7 @@ export default function HomePage() {
             }}
           />
 
-          <div className="container-narrow relative z-[1]">
+          <div className="max-w-[1100px] mx-auto px-6 pb-[20px] flex w-full relative z-[1]">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-10 text-center">
               {STATS.map((s) => (
                 <div key={s.label} className="group">
@@ -498,18 +500,18 @@ export default function HomePage() {
             SECTION 4 — HOW IT WORKS
         ───────────────────────────────────────────────────────────────────── */}
         <section id="how-it-works" className="py-28 px-6 bg-[#FAFFF8]">
-          <div className="container-narrow">
+          <div className="max-w-[1100px] mx-auto px-6 pb-[20px] flex w-full">
             <div className="text-center mb-16">
-              <span className="section-label text-[#FFB703]">
+              <span className="text-[0.8rem] font-bold uppercase tracking-[0.14em] inline-block mb-3 text-[#FFB703]">
                 Simple Process
               </span>
               <h2
-                className="section-heading text-[clamp(1.8rem,3.5vw,2.6rem)]"
+                className="font-serif font-extrabold text-[#1A2E22] leading-[1.2] mb-2 text-[clamp(1.8rem,3.5vw,2.6rem)]"
                 style={{ fontFamily: "var(--font-serif)" }}
               >
                 From Field to Fork in 3 Simple Steps
               </h2>
-              <p className="section-subtitle max-w-[520px] mx-auto">
+              <p className="text-[0.95rem] text-[#4A6355] leading-[1.7] mt-2 max-w-[520px] mx-auto">
                 We&apos;ve made it effortless to get the freshest produce
                 straight from the farm to your kitchen.
               </p>
@@ -551,19 +553,19 @@ export default function HomePage() {
             SECTION 5 — FEATURED MARKETPLACE
         ───────────────────────────────────────────────────────────────────── */}
         <section id="marketplace" className="py-28 px-6 bg-white">
-          <div className="container-wide">
+          <div className="max-w-[1280px] mx-auto px-6 w-full">
             <div className="flex justify-between items-end mb-14 flex-wrap gap-6">
               <div>
-                <span className="section-label text-[#2D6A4F]">
+                <span className="text-[0.8rem] font-bold uppercase tracking-[0.14em] inline-block mb-3 text-[#2D6A4F]">
                   Live Marketplace
                 </span>
                 <h2
-                  className="section-heading text-[clamp(1.8rem,3vw,2.4rem)]"
+                  className="font-serif font-extrabold text-[#1A2E22] leading-[1.2] mb-2 text-[clamp(1.8rem,3vw,2.4rem)]"
                   style={{ fontFamily: "var(--font-serif)" }}
                 >
                   Fresh From the Fields Today
                 </h2>
-                <p className="section-subtitle mt-2">
+                <p className="text-[0.95rem] text-[#4A6355] leading-[1.7] mt-2">
                   Prices update dynamically based on real-time demand
                 </p>
               </div>
@@ -591,18 +593,18 @@ export default function HomePage() {
           id="farmer-spotlight"
           className="py-28 px-6 bg-gradient-to-b from-[#D8F3DC] to-[#E8F5E9]"
         >
-          <div className="container-narrow">
+          <div className="max-w-[1100px] mx-auto px-6 pb-[20px] flex w-full">
             <div className="text-center mb-14">
-              <span className="section-label text-[#FFB703]">
+              <span className="text-[0.8rem] font-bold uppercase tracking-[0.14em] inline-block mb-3 text-[#FFB703]">
                 🏆 Farmer Spotlight
               </span>
               <h2
-                className="section-heading text-[clamp(1.8rem,3.5vw,2.6rem)] text-[#1B4332]"
+                className="font-serif font-extrabold text-[#1B4332] leading-[1.2] mb-2 text-[clamp(1.8rem,3.5vw,2.6rem)]"
                 style={{ fontFamily: "var(--font-serif)" }}
               >
                 Farmer of the Month
               </h2>
-              <p className="section-subtitle">
+              <p className="text-[0.95rem] text-[#4A6355] leading-[1.7] mt-2">
                 Meet the dedicated growers behind your food
               </p>
             </div>
@@ -705,13 +707,11 @@ export default function HomePage() {
             SECTION 7 — SOCIAL PROOF / REVIEWS
         ───────────────────────────────────────────────────────────────────── */}
         <section id="reviews" className="py-28 px-6 bg-white">
-          <div className="container-narrow">
+          <div className="max-w-[1100px] mx-auto px-6 pb-[20px] flex w-full">
             <div className="text-center mb-14">
-              <span className="section-label text-[#2D6A4F]">
-                Social Proof
-              </span>
+              <span className="text-[0.8rem] font-bold uppercase tracking-[0.14em] inline-block mb-3 text-[#2D6A4F]">Social Proof</span>
               <h2
-                className="section-heading text-[clamp(1.8rem,3.5vw,2.6rem)]"
+                className="font-serif font-extrabold text-[#1A2E22] leading-[1.2] mb-2 text-[clamp(1.8rem,3.5vw,2.6rem)]"
                 style={{ fontFamily: "var(--font-serif)" }}
               >
                 10,000+ Families Choose Fresh Direct
@@ -830,7 +830,7 @@ export default function HomePage() {
         {/* Subtle top-border glow */}
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#52B788]/40 to-transparent" />
 
-        <div className="container-wide">
+        <div className="max-w-[1280px] mx-auto px-6 w-full">
           {/* ── Footer top grid ─────────────────────────────────────────────── */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2.5fr_1fr_1fr_1fr] gap-x-12 gap-y-14 mb-16">
             {/* Brand column */}
