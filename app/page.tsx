@@ -6,68 +6,155 @@ import FarmerCard, { FarmerCardProps } from "@/components/farmer/FarmerCard";
 // ─── Static Demo Data (replace with MongoDB fetch in Phase 3) ─────────────────
 const FEATURED_PRODUCTS: ProductCardProps[] = [
   {
-    id: "p1", name: "Baby Spinach", category: "Vegetables",
-    basePrice: 220, currentPrice: 264, demandFactor: 1.35,
-    unit: "500g", image: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400&h=300&fit=crop",
+    id: "p1",
+    name: "Baby Spinach",
+    category: "Vegetables",
+    basePrice: 220,
+    currentPrice: 264,
+    demandFactor: 1.35,
+    unit: "500g",
+    image:
+      "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400&h=300&fit=crop",
     harvestDate: new Date(Date.now() - 4 * 3600000).toISOString(),
-    farmerId: "f1", farmerName: "Nimal Perera", farmLocation: "Nuwara Eliya",
-    stockQty: 28, isOrganic: true,
+    farmerId: "f1",
+    farmerName: "Nimal Perera",
+    farmLocation: "Nuwara Eliya",
+    stockQty: 28,
+    isOrganic: true,
   },
   {
-    id: "p2", name: "King Coconut", category: "Fruits",
-    basePrice: 120, currentPrice: 96, demandFactor: 0.8,
-    unit: "piece", image: "https://images.unsplash.com/photo-1513467535987-fd81bc7d62f8?w=400&h=300&fit=crop",
+    id: "p2",
+    name: "King Coconut",
+    category: "Fruits",
+    basePrice: 120,
+    currentPrice: 96,
+    demandFactor: 0.8,
+    unit: "piece",
+    image:
+      "https://images.unsplash.com/photo-1513467535987-fd81bc7d62f8?w=400&h=300&fit=crop",
     harvestDate: new Date(Date.now() - 8 * 3600000).toISOString(),
-    farmerId: "f2", farmerName: "Sudu Banda", farmLocation: "Kurunegala",
-    stockQty: 4, isOrganic: false,
+    farmerId: "f2",
+    farmerName: "Sudu Banda",
+    farmLocation: "Kurunegala",
+    stockQty: 4,
+    isOrganic: false,
   },
   {
-    id: "p3", name: "Cherry Tomatoes", category: "Vegetables",
-    basePrice: 380, currentPrice: 399, demandFactor: 1.05,
-    unit: "kg", image: "https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=400&h=300&fit=crop",
+    id: "p3",
+    name: "Cherry Tomatoes",
+    category: "Vegetables",
+    basePrice: 380,
+    currentPrice: 399,
+    demandFactor: 1.05,
+    unit: "kg",
+    image:
+      "https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=400&h=300&fit=crop",
     harvestDate: new Date(Date.now() - 6 * 3600000).toISOString(),
-    farmerId: "f3", farmerName: "Kamala Devi", farmLocation: "Jaffna",
-    stockQty: 15, isOrganic: true,
+    farmerId: "f3",
+    farmerName: "Kamala Devi",
+    farmLocation: "Jaffna",
+    stockQty: 15,
+    isOrganic: true,
   },
   {
-    id: "p4", name: "Red Lotus Rice", category: "Grains",
-    basePrice: 560, currentPrice: 560, demandFactor: 1.0,
-    unit: "kg", image: "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?w=400&h=300&fit=crop",
+    id: "p4",
+    name: "Red Lotus Rice",
+    category: "Grains",
+    basePrice: 560,
+    currentPrice: 560,
+    demandFactor: 1.0,
+    unit: "kg",
+    image:
+      "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?w=400&h=300&fit=crop",
     harvestDate: new Date(Date.now() - 2 * 24 * 3600000).toISOString(),
-    farmerId: "f4", farmerName: "Ravi Kumaran", farmLocation: "Polonnaruwa",
-    stockQty: 50, isOrganic: false,
+    farmerId: "f4",
+    farmerName: "Ravi Kumaran",
+    farmLocation: "Polonnaruwa",
+    stockQty: 50,
+    isOrganic: false,
   },
   {
-    id: "p5", name: "Murunga Leaves", category: "Herbs",
-    basePrice: 80, currentPrice: 104, demandFactor: 1.4,
-    unit: "bunch", image: "https://images.unsplash.com/photo-1618375569909-3c8616cf7733?w=400&h=300&fit=crop",
+    id: "p5",
+    name: "Murunga Leaves",
+    category: "Herbs",
+    basePrice: 80,
+    currentPrice: 104,
+    demandFactor: 1.4,
+    unit: "bunch",
+    image:
+      "https://images.unsplash.com/photo-1618375569909-3c8616cf7733?w=400&h=300&fit=crop",
     harvestDate: new Date(Date.now() - 2 * 3600000).toISOString(),
-    farmerId: "f1", farmerName: "Nimal Perera", farmLocation: "Nuwara Eliya",
-    stockQty: 8, isOrganic: true,
+    farmerId: "f1",
+    farmerName: "Nimal Perera",
+    farmLocation: "Nuwara Eliya",
+    stockQty: 8,
+    isOrganic: true,
   },
   {
-    id: "p6", name: "Pineapple", category: "Fruits",
-    basePrice: 350, currentPrice: 315, demandFactor: 0.9,
-    unit: "piece", image: "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=400&h=300&fit=crop",
+    id: "p6",
+    name: "Pineapple",
+    category: "Fruits",
+    basePrice: 350,
+    currentPrice: 315,
+    demandFactor: 0.9,
+    unit: "piece",
+    image:
+      "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=400&h=300&fit=crop",
     harvestDate: new Date(Date.now() - 12 * 3600000).toISOString(),
-    farmerId: "f5", farmerName: "Saman Wickrama", farmLocation: "Gampaha",
-    stockQty: 22, isOrganic: false,
+    farmerId: "f5",
+    farmerName: "Saman Wickrama",
+    farmLocation: "Gampaha",
+    stockQty: 22,
+    isOrganic: false,
   },
 ];
 
 const FEATURED_FARMER: FarmerCardProps = {
-  id: "f1", farmerName: "Nimal Perera", farmName: "Green Hills Farm",
+  id: "f1",
+  farmerName: "Nimal Perera",
+  farmName: "Green Hills Farm",
   location: "Nuwara Eliya, Central Province",
   bio: "Third-generation farmer specializing in highland vegetables. Our farm sits at 1,800m elevation, producing some of the finest organic greens in Sri Lanka. We believe in sustainable farming that respects both nature and the consumer.",
-  image: "https://images.unsplash.com/photo-1589923188900-85dae523342b?w=200&h=200&fit=crop",
-  productCount: 14, certifications: ["Organic Certified", "SL GAP", "Chemical-Free"],
-  isVerified: true, rating: 4.9, reviewCount: 234,
+  image:
+    "https://images.unsplash.com/photo-1589923188900-85dae523342b?w=200&h=200&fit=crop",
+  productCount: 14,
+  certifications: ["Organic Certified", "SL GAP", "Chemical-Free"],
+  isVerified: true,
+  rating: 4.9,
+  reviewCount: 234,
 };
 
 const REVIEWS = [
-  { id: "r1", name: "Sachini Fernando", location: "Colombo 7", avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b5bc?w=60&h=60&fit=crop&face", rating: 5, text: "Absolutely incredible quality! The spinach was so fresh it still had dew on it. Delivered within 12 hours of ordering. My family couldn't believe it!", product: "Baby Spinach from Nimal Perera" },
-  { id: "r2", name: "Dinesh Jayawardena", location: "Kandy", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&face", rating: 5, text: "Finally, a platform that connects us to the real source! The tomatoes were perfect and the price was much better than the supermarket.", product: "Cherry Tomatoes from Kamala Devi" },
-  { id: "r3", name: "Priya Ratnayake", location: "Nugegoda", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&face", rating: 5, text: "I love that I can see exactly which farmer grew my food. The king coconuts from Sudu Banda were the sweetest I've ever had!", product: "King Coconut from Sudu Banda" },
+  {
+    id: "r1",
+    name: "Sachini Fernando",
+    location: "Colombo 7",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108755-2616b612b5bc?w=60&h=60&fit=crop&face",
+    rating: 5,
+    text: "Absolutely incredible quality! The spinach was so fresh it still had dew on it. Delivered within 12 hours of ordering. My family couldn't believe it!",
+    product: "Baby Spinach from Nimal Perera",
+  },
+  {
+    id: "r2",
+    name: "Dinesh Jayawardena",
+    location: "Kandy",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&face",
+    rating: 5,
+    text: "Finally, a platform that connects us to the real source! The tomatoes were perfect and the price was much better than the supermarket.",
+    product: "Cherry Tomatoes from Kamala Devi",
+  },
+  {
+    id: "r3",
+    name: "Priya Ratnayake",
+    location: "Nugegoda",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&face",
+    rating: 5,
+    text: "I love that I can see exactly which farmer grew my food. The king coconuts from Sudu Banda were the sweetest I've ever had!",
+    product: "King Coconut from Sudu Banda",
+  },
 ];
 
 const STATS = [
@@ -78,10 +165,58 @@ const STATS = [
 ];
 
 const STEPS = [
-  { num: "01", icon: "🔍", title: "Browse & Choose", desc: "Search thousands of fresh produce listings from verified Sri Lankan farmers. Filter by category, location, or harvest date." },
-  { num: "02", icon: "🌾", title: "Farmer Harvests", desc: "Your order triggers a real-time harvest notification to the farmer. Produce is picked fresh, same day — no cold storage delays." },
-  { num: "03", icon: "🚚", title: "Delivered Fresh", desc: "Farm-direct to your door within 24 hours. Track your order in real-time via WhatsApp or SMS updates." },
+  {
+    num: "01",
+    icon: "🔍",
+    title: "Browse & Choose",
+    desc: "Search thousands of fresh produce listings from verified Sri Lankan farmers. Filter by category, location, or harvest date.",
+  },
+  {
+    num: "02",
+    icon: "🌾",
+    title: "Farmer Harvests",
+    desc: "Your order triggers a real-time harvest notification to the farmer. Produce is picked fresh, same day — no cold storage delays.",
+  },
+  {
+    num: "03",
+    icon: "🚚",
+    title: "Delivered Fresh",
+    desc: "Farm-direct to your door within 24 hours. Track your order in real-time via WhatsApp or SMS updates.",
+  },
 ];
+
+const FOOTER_COLUMNS = [
+  {
+    heading: "Marketplace",
+    links: [
+      { label: "All Products", href: "/products" },
+      { label: "Vegetables", href: "/products?category=vegetables" },
+      { label: "Fruits", href: "/products?category=fruits" },
+      { label: "Herbs", href: "/products?category=herbs" },
+      { label: "Grains", href: "/products?category=grains" },
+    ],
+  },
+  {
+    heading: "Farmers",
+    links: [
+      { label: "Join as Farmer", href: "/register?role=farmer" },
+      { label: "Farmer Dashboard", href: "/FamerDashbord" },
+      { label: "Success Stories", href: "#" },
+      { label: "Certification", href: "#" },
+    ],
+  },
+  {
+    heading: "Company",
+    links: [
+      { label: "About Us", href: "#" },
+      { label: "How It Works", href: "#how-it-works" },
+      { label: "Blog", href: "#" },
+      { label: "Contact", href: "#" },
+    ],
+  },
+];
+
+const LEGAL_LINKS = ["Privacy Policy", "Terms of Service", "Cookie Policy"];
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 export default function HomePage() {
@@ -90,7 +225,9 @@ export default function HomePage() {
       <Navbar />
 
       <main>
-        {/* ── 1. HERO SECTION ─────────────────────────────────────────────── */}
+        {/* ─────────────────────────────────────────────────────────────────────
+            SECTION 1 — HERO
+        ───────────────────────────────────────────────────────────────────── */}
         <section
           id="hero"
           className="min-h-screen bg-gradient-to-br from-[#F0FBF1] via-[#D8F3DC] to-[#B7E4C7] flex items-center pt-28 pb-20 px-6 relative overflow-hidden"
@@ -123,7 +260,7 @@ export default function HomePage() {
 
           <div className="container-wide">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-              {/* Left: Text */}
+              {/* Left — Text content */}
               <div className="animate-fade-in-up">
                 {/* Live badge */}
                 <div className="inline-flex items-center gap-2.5 bg-white/90 backdrop-blur-sm border border-[#D0EDD8] rounded-full px-5 py-2 mb-8 shadow-[0_4px_24px_rgba(45,106,79,0.08)]">
@@ -175,22 +312,20 @@ export default function HomePage() {
 
                 {/* Mini trust signals */}
                 <div className="flex gap-8 flex-wrap">
-                  {[
-                    "✅ No Middlemen",
-                    "🌿 Chemical-Free",
-                    "⚡ 24h Delivery",
-                  ].map((item) => (
-                    <span
-                      key={item}
-                      className="text-[0.85rem] text-[#4A6355] font-medium"
-                    >
-                      {item}
-                    </span>
-                  ))}
+                  {["✅ No Middlemen", "🌿 Chemical-Free", "⚡ 24h Delivery"].map(
+                    (item) => (
+                      <span
+                        key={item}
+                        className="text-[0.85rem] text-[#4A6355] font-medium"
+                      >
+                        {item}
+                      </span>
+                    ),
+                  )}
                 </div>
               </div>
 
-              {/* Right: Hero visual card */}
+              {/* Right — Hero visual card */}
               <div className="animate-fade-in-up delay-300 relative">
                 <div className="rounded-[28px] overflow-hidden shadow-[0_30px_80px_rgba(45,106,79,0.22)] aspect-[4/3] relative">
                   <img
@@ -235,8 +370,10 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── 2. PROBLEM / SOLUTION ───────────────────────────────────────── */}
-        <section id="problem-solution" className="py-24 px-6 bg-white">
+        {/* ─────────────────────────────────────────────────────────────────────
+            SECTION 2 — PROBLEM vs SOLUTION
+        ───────────────────────────────────────────────────────────────────── */}
+        <section id="problem-solution" className="py-28 px-6 bg-white">
           <div className="container-narrow">
             <div className="text-center mb-16">
               <span className="section-label text-[#2D6A4F]">The Problem</span>
@@ -318,12 +455,14 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── 3. TRUST BAR / STATS ────────────────────────────────────────── */}
+        {/* ─────────────────────────────────────────────────────────────────────
+            SECTION 3 — TRUST BAR / STATS
+        ───────────────────────────────────────────────────────────────────── */}
         <section
           id="trust-bar"
           className="bg-gradient-to-br from-[#2D6A4F] to-[#1B4332] py-20 px-6 relative overflow-hidden"
         >
-          {/* Subtle pattern overlay */}
+          {/* Subtle dot pattern overlay */}
           <div
             className="absolute inset-0 opacity-[0.04]"
             style={{
@@ -355,8 +494,10 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── 4. HOW IT WORKS ─────────────────────────────────────────────── */}
-        <section id="how-it-works" className="py-24 px-6 bg-[#FAFFF8]">
+        {/* ─────────────────────────────────────────────────────────────────────
+            SECTION 4 — HOW IT WORKS
+        ───────────────────────────────────────────────────────────────────── */}
+        <section id="how-it-works" className="py-28 px-6 bg-[#FAFFF8]">
           <div className="container-narrow">
             <div className="text-center mb-16">
               <span className="section-label text-[#FFB703]">
@@ -406,10 +547,12 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── 5. FEATURED MARKETPLACE ─────────────────────────────────────── */}
-        <section id="marketplace" className="py-24 px-6 bg-white">
+        {/* ─────────────────────────────────────────────────────────────────────
+            SECTION 5 — FEATURED MARKETPLACE
+        ───────────────────────────────────────────────────────────────────── */}
+        <section id="marketplace" className="py-28 px-6 bg-white">
           <div className="container-wide">
-            <div className="flex justify-between items-end mb-12 flex-wrap gap-6">
+            <div className="flex justify-between items-end mb-14 flex-wrap gap-6">
               <div>
                 <span className="section-label text-[#2D6A4F]">
                   Live Marketplace
@@ -441,10 +584,12 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── 6. FARMER OF THE MONTH SPOTLIGHT ────────────────────────────── */}
+        {/* ─────────────────────────────────────────────────────────────────────
+            SECTION 6 — FARMER OF THE MONTH SPOTLIGHT
+        ───────────────────────────────────────────────────────────────────── */}
         <section
           id="farmer-spotlight"
-          className="py-24 px-6 bg-gradient-to-b from-[#D8F3DC] to-[#E8F5E9]"
+          className="py-28 px-6 bg-gradient-to-b from-[#D8F3DC] to-[#E8F5E9]"
         >
           <div className="container-narrow">
             <div className="text-center mb-14">
@@ -556,11 +701,15 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── 7. SOCIAL PROOF / REVIEWS ───────────────────────────────────── */}
-        <section id="reviews" className="py-24 px-6 bg-white">
+        {/* ─────────────────────────────────────────────────────────────────────
+            SECTION 7 — SOCIAL PROOF / REVIEWS
+        ───────────────────────────────────────────────────────────────────── */}
+        <section id="reviews" className="py-28 px-6 bg-white">
           <div className="container-narrow">
             <div className="text-center mb-14">
-              <span className="section-label text-[#2D6A4F]">Social Proof</span>
+              <span className="section-label text-[#2D6A4F]">
+                Social Proof
+              </span>
               <h2
                 className="section-heading text-[clamp(1.8rem,3.5vw,2.6rem)]"
                 style={{ fontFamily: "var(--font-serif)" }}
@@ -627,10 +776,12 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── 8. FINAL CTA BANNER ─────────────────────────────────────────── */}
+        {/* ─────────────────────────────────────────────────────────────────────
+            SECTION 8 — FINAL CTA BANNER
+        ───────────────────────────────────────────────────────────────────── */}
         <section
           id="cta-banner"
-          className="py-24 px-6 bg-gradient-to-br from-[#1B4332] via-[#2D6A4F] to-[#1B4332] text-center relative overflow-hidden"
+          className="py-32 px-6 bg-gradient-to-br from-[#1B4332] via-[#2D6A4F] to-[#1B4332] text-center relative overflow-hidden"
         >
           {/* Decorative circles */}
           <div className="absolute top-[-80px] left-[-80px] w-[280px] h-[280px] rounded-full bg-[#52B788]/10 pointer-events-none" />
@@ -667,92 +818,130 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+      </main>
 
-        {/* ── FOOTER ──────────────────────────────────────────────────────── */}
-        <footer className="bg-[#1B4332] pt-16 pb-8 px-6 text-white/65">
-          <div className="container-wide">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-12 mb-12">
-              {/* Brand */}
-              <div>
-                <div className="flex items-center gap-2.5 mb-4">
-                  <span className="text-2xl">🌿</span>
-                  <span
-                    className="text-[1.3rem] font-bold text-white"
-                    style={{ fontFamily: "var(--font-serif)" }}
+      {/* ═══════════════════════════════════════════════════════════════════════
+          FOOTER — Separated from <main> with generous top spacing
+      ═══════════════════════════════════════════════════════════════════════ */}
+      <footer
+        id="site-footer"
+        className="bg-[#0F2B1D] pt-28 pb-10 px-6 relative overflow-hidden"
+      >
+        {/* Subtle top-border glow */}
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#52B788]/40 to-transparent" />
+
+        <div className="container-wide">
+          {/* ── Footer top grid ─────────────────────────────────────────────── */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2.5fr_1fr_1fr_1fr] gap-x-12 gap-y-14 mb-16">
+            {/* Brand column */}
+            <div>
+              <div className="flex items-center gap-2.5 mb-5">
+                <span className="text-2xl">🌿</span>
+                <span
+                  className="text-[1.4rem] font-bold text-white tracking-tight"
+                  style={{ fontFamily: "var(--font-serif)" }}
+                >
+                  Fresh<span className="text-[#FFB703]">Direct</span>
+                </span>
+              </div>
+              <p className="text-[0.9rem] leading-[1.8] text-white/50 max-w-[300px] mb-6">
+                Connecting Sri Lankan farmers directly with families who care
+                about what they eat. Harvested today, on your table tomorrow.
+              </p>
+
+              {/* Social icons */}
+              <div className="flex items-center gap-4">
+                {[
+                  { label: "Facebook", icon: "f" },
+                  { label: "Twitter", icon: "𝕏" },
+                  { label: "Instagram", icon: "📷" },
+                  { label: "WhatsApp", icon: "💬" },
+                ].map((social) => (
+                  <Link
+                    key={social.label}
+                    href="#"
+                    aria-label={social.label}
+                    className="no-underline w-10 h-10 rounded-full bg-white/[0.07] border border-white/[0.1] flex items-center justify-center text-white/50 text-sm hover:bg-[#2D6A4F] hover:text-white hover:border-[#2D6A4F] transition-all duration-200"
                   >
-                    Fresh<span className="text-[#FFB703]">Direct</span>
-                  </span>
-                </div>
-                <p className="text-[0.88rem] leading-[1.75] max-w-[280px]">
-                  Connecting Sri Lankan farmers directly with families who care
-                  about what they eat.
+                    {social.icon}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Link columns */}
+            {FOOTER_COLUMNS.map((col) => (
+              <div key={col.heading}>
+                <h4 className="text-white font-bold text-[0.85rem] uppercase tracking-[0.12em] mb-6">
+                  {col.heading}
+                </h4>
+                <ul className="list-none flex flex-col gap-3.5">
+                  {col.links.map((link) => (
+                    <li key={link.label}>
+                      <Link
+                        href={link.href}
+                        className="no-underline text-[0.88rem] text-white/45 hover:text-[#FFB703] hover:translate-x-1 transition-all duration-200 inline-block"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          {/* ── Newsletter bar ──────────────────────────────────────────────── */}
+          <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl p-8 md:p-10 mb-16">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div>
+                <h4
+                  className="text-white font-bold text-[1.15rem] mb-1"
+                  style={{ fontFamily: "var(--font-serif)" }}
+                >
+                  Stay Fresh 🌱
+                </h4>
+                <p className="text-white/45 text-[0.88rem] m-0">
+                  Weekly picks, seasonal recipes, and exclusive farmer stories
+                  delivered to your inbox.
                 </p>
               </div>
-              {[
-                {
-                  heading: "Marketplace",
-                  links: [
-                    "All Products",
-                    "Vegetables",
-                    "Fruits",
-                    "Herbs",
-                    "Grains",
-                  ],
-                },
-                {
-                  heading: "Farmers",
-                  links: [
-                    "Join as Farmer",
-                    "Farmer Dashboard",
-                    "Success Stories",
-                    "Certification",
-                  ],
-                },
-                {
-                  heading: "Company",
-                  links: ["About Us", "How It Works", "Blog", "Contact"],
-                },
-              ].map((col) => (
-                <div key={col.heading}>
-                  <h4 className="text-white font-bold text-[0.92rem] mb-5 tracking-[0.02em]">
-                    {col.heading}
-                  </h4>
-                  <ul className="list-none flex flex-col gap-3">
-                    {col.links.map((link) => (
-                      <li key={link}>
-                        <Link
-                          href="#"
-                          className="no-underline text-[0.88rem] text-white/55 hover:text-white hover:translate-x-1 transition-all duration-200 inline-block"
-                        >
-                          {link}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-            <div className="border-t border-white/10 pt-6 flex justify-between items-center flex-wrap gap-4">
-              <p className="text-[0.82rem] text-white/40">
-                © 2026 Fresh Direct. Made with 💚 in Sri Lanka
-              </p>
-              <div className="flex gap-6">
-                {["Privacy Policy", "Terms of Service", "Cookie Policy"].map(
-                  (item) => (
-                    <Link
-                      key={item}
-                      href="#"
-                      className="no-underline text-[0.82rem] text-white/40 hover:text-white/70 transition-colors duration-200"
-                    >
-                      {item}
-                    </Link>
-                  ),
-                )}
+              <div className="flex gap-3 w-full md:w-auto">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  aria-label="Email address"
+                  className="bg-white/[0.08] border border-white/[0.12] text-white placeholder:text-white/30 rounded-full px-6 py-3 text-[0.88rem] outline-none focus:border-[#FFB703]/50 focus:bg-white/[0.1] transition-all duration-200 w-full md:w-[280px]"
+                />
+                <button
+                  type="button"
+                  className="bg-[#FFB703] text-[#1A2E22] font-bold text-[0.88rem] px-7 py-3 rounded-full whitespace-nowrap hover:bg-[#E09F00] hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(255,183,3,0.3)] transition-all duration-200 cursor-pointer"
+                >
+                  Subscribe
+                </button>
               </div>
             </div>
           </div>
-        </footer>
-      </main>
+
+          {/* ── Footer bottom bar ───────────────────────────────────────────── */}
+          <div className="border-t border-white/[0.08] pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-[0.82rem] text-white/35 m-0">
+              © 2026 Fresh Direct. Made with 💚 in Sri Lanka
+            </p>
+            <div className="flex gap-6">
+              {LEGAL_LINKS.map((item) => (
+                <Link
+                  key={item}
+                  href="#"
+                  className="no-underline text-[0.82rem] text-white/35 hover:text-white/60 transition-colors duration-200"
+                >
+                  {item}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }
