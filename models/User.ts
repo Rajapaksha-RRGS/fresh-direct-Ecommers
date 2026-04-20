@@ -7,6 +7,10 @@ export interface IUser extends Document {
   passwordHash: string;
   phone?: string;
   address?: string;
+  /** National Identity Card — stored on farmers (unique, sparse) */
+  nic?: string;
+  /** Mobile number — stored on farmers (unique, sparse) */
+  mobile?: string;
   role: "CUSTOMER" | "FARMER" | "ADMIN";
   isActive: boolean;
   createdAt: Date;
@@ -43,6 +47,18 @@ const UserSchema = new Schema<IUser>(
     address: {
       type: String,
       trim: true,
+    },
+    nic: {
+      type: String,
+      trim: true,
+      sparse: true, // unique only when defined
+      unique: true,
+    },
+    mobile: {
+      type: String,
+      trim: true,
+      sparse: true,
+      unique: true,
     },
     role: {
       type: String,
