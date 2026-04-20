@@ -18,7 +18,7 @@ export default function LoginPage() {
     try {
       setIsGoogleLoading(true);
       setError("");
-      await signIn("google", { callbackUrl: "/products" });
+      await signIn("google", { callbackUrl: "/" });
     } catch {
       setError("Google sign-in failed. Please try again.");
       setIsGoogleLoading(false);
