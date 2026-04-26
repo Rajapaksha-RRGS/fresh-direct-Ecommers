@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import UserMenu from "@/components/layout/UserMenu";
 
 const NAV_LINKS = [
-  { label: "Shop", href: "/products" },
+  { label: "Shop", href: "/marketplace" },
   { label: "Farmers", href: "/farmers" },
   { label: "How It Works", href: "#how-it-works" },
   { label: "About", href: "#about" },
@@ -23,27 +24,22 @@ export default function Navbar() {
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
   return (
     <>
       <nav
         id="navbar"
-        className={`fixed top-0 h-16 left-0 right-0 z-1000 transition-all duration-300 ease-in-out ${
+        className={`fixed top-0 h-16 left-0 right-0 z-[1000] transition-all duration-300 ease-in-out ${
           scrolled
             ? "bg-white/[0.97] backdrop-blur-xl shadow-[0_2px_20px_rgba(45,106,79,0.10)] py-3"
             : "bg-transparent py-4"
         }`}
       >
         <div className="max-w-[1280px] mx-auto px-6 w-full h-full flex items-center justify-between">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="no-underline flex items-center gap-2.5 group"
-          >
+          {/* ── Logo ── */}
+          <Link href="/" className="no-underline flex items-center gap-2.5 group">
             <div className="w-10 h-10 bg-gradient-to-br from-[#2D6A4F] to-[#52B788] rounded-xl flex items-center justify-center text-xl shadow-[0_4px_12px_rgba(45,106,79,0.25)] group-hover:shadow-[0_6px_20px_rgba(45,106,79,0.35)] transition-shadow duration-300">
               🌿
             </div>
@@ -55,7 +51,7 @@ export default function Navbar() {
             </span>
           </Link>
 
-          {/* Desktop Nav */}
+          {/* ── Desktop Nav Links ── */}
           <div className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((item) => (
               <Link
@@ -71,59 +67,52 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* CTA Buttons + Hamburger */}
-          <div className="flex items-center gap-4 border-amber-600">
+          {/* ── Right side: UserMenu + Shop CTA + Hamburger ── */}
+          <div className="flex items-center gap-3">
+            {/* Dynamic auth widget (desktop) */}
+            <div className="hidden sm:flex items-center">
+              <UserMenu />
+            </div>
+
+            {/* Shop Fresh CTA — always visible on desktop */}
             <Link
-              href="/login"
-              className="no-underline text-[#2D6A4F] font-semibold text-[0.95rem] px-7 py-3.5 rounded-lg hover:bg-[#F0FBF1] hover:text-[#1B4332] transition-all duration-200 hidden sm:block"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/products"
+              href="/marketplace"
               id="nav-shop-cta"
-              className="no-underline bg-[#09790a] text-[#1A2E22] font-bold text-[0.95rem] px-11 py-4 rounded-full shadow-[0_8px_30px_rgba(255,183,3,0.35)] hover:bg-[#E09F00] hover:-translate-y-0.5 hover:shadow-[0_10px_35px_rgba(255,183,3,0.45)] transition-all duration-200 hidden sm:inline-block"
+              className="no-underline bg-[#09790a] text-white font-bold text-[0.88rem] px-5 py-2.5 rounded-full shadow-[0_4px_14px_rgba(9,121,10,0.30)] hover:bg-[#1A3020] hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(9,121,10,0.35)] transition-all duration-200 hidden sm:inline-flex items-center gap-1.5"
             >
               Shop Fresh 🛒
             </Link>
 
-            {/* Hamburger */}
+            {/* Hamburger (mobile) */}
             <button
               id="mobile-menu-toggle"
               onClick={() => setMenuOpen(!menuOpen)}
               className="md:hidden flex flex-col gap-[6px] items-center justify-center w-11 h-11 rounded-lg bg-transparent border-none cursor-pointer hover:bg-[#F0FBF1] transition-colors"
               aria-label="Toggle navigation menu"
             >
-              <span
-                className={`block w-6 h-[2.5px] bg-[#2D6A4F] rounded-full transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-[8px]" : ""}`}
-              />
-              <span
-                className={`block w-6 h-[2.5px] bg-[#2D6A4F] rounded-full transition-all duration-300 ${menuOpen ? "opacity-0 scale-x-0" : ""}`}
-              />
-              <span
-                className={`block w-6 h-[2.5px] bg-[#2D6A4F] rounded-full transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-[8px]" : ""}`}
-              />
+              <span className={`block w-6 h-[2.5px] bg-[#2D6A4F] rounded-full transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-[8px]" : ""}`} />
+              <span className={`block w-6 h-[2.5px] bg-[#2D6A4F] rounded-full transition-all duration-300 ${menuOpen ? "opacity-0 scale-x-0" : ""}`} />
+              <span className={`block w-6 h-[2.5px] bg-[#2D6A4F] rounded-full transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-[8px]" : ""}`} />
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* ── Mobile Menu Backdrop ── */}
       <div
         className={`fixed inset-0 bg-black/40 z-[999] transition-opacity duration-300 md:hidden ${
-          menuOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
+          menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         onClick={() => setMenuOpen(false)}
       />
 
-      {/* Mobile Menu Drawer */}
+      {/* ── Mobile Menu Drawer ── */}
       <div
         className={`fixed top-0 right-0 h-full w-[280px] bg-white z-[1001] transition-transform duration-300 ease-in-out shadow-[-8px_0_30px_rgba(0,0,0,0.1)] md:hidden flex flex-col ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
+        {/* Drawer header */}
         <div className="flex items-center justify-between p-6 border-b border-[#D0EDD8]">
           <span
             className="text-[1.2rem] font-bold text-[#2D6A4F]"
@@ -140,6 +129,7 @@ export default function Navbar() {
           </button>
         </div>
 
+        {/* Mobile nav links */}
         <nav className="flex flex-col gap-1 p-4 flex-1">
           {NAV_LINKS.map((item) => (
             <Link
@@ -153,18 +143,16 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <div className="p-6 border-t border-[#D0EDD8] flex flex-col gap-3">
+        {/* Mobile drawer footer — UserMenu + Shop CTA */}
+        <div className="p-5 border-t border-[#D0EDD8] flex flex-col gap-3">
+          {/* Auth widget — full width in mobile drawer */}
+          <div className="flex justify-center">
+            <UserMenu />
+          </div>
           <Link
-            href="/login"
+            href="/marketplace"
             onClick={() => setMenuOpen(false)}
-            className="no-underline text-center text-[#2D6A4F] font-semibold text-[0.95rem] py-3 rounded-xl border-2 border-[#2D6A4F] hover:bg-[#2D6A4F] hover:text-white transition-all duration-200"
-          >
-            Sign In
-          </Link>
-          <Link
-            href="/products"
-            onClick={() => setMenuOpen(false)}
-            className="no-underline text-center bg-[#FFB703] text-[#1A2E22] font-bold text-[0.95rem] py-3 rounded-xl shadow-[0_8px_30px_rgba(255,183,3,0.35)] hover:bg-[#E09F00] transition-all duration-200"
+            className="no-underline text-center bg-[#09790a] text-white font-bold text-[0.95rem] py-3 rounded-full shadow-[0_4px_14px_rgba(9,121,10,0.25)] hover:bg-[#1A3020] transition-all duration-200"
           >
             Shop Fresh 🛒
           </Link>
