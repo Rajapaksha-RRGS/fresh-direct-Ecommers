@@ -23,6 +23,8 @@ import {
   Sprout,
   Package,
 } from "lucide-react";
+import AddToCartButton from "@/components/AddToCartButton";
+import CartNavButton from "@/components/CartNavButton";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface PopulatedUser {
@@ -48,6 +50,7 @@ interface FarmerData {
 
 interface ProductData {
   _id: string;
+  farmerId: string;
   name: string;
   category: string;
   basePrice: number;
@@ -81,29 +84,21 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 // ─── Server-side data fetch ───────────────────────────────────────────────────
-async function getFarmerData(id: string): Promise<{ farmer: FarmerData; products: ProductData[] } | null> {
+async function getFarmerData(id: string) {
   try {
-    await connectDB();
+    // Using absolute URL for server-side fetch
+    const baseUrl =
+      process.env.NEXTAUTH_URL ||
+      process.env.VERCEL_URL ||
+      "http://localhost:3000";
+    const url = `${baseUrl}/api/farmerProfile/${id}`;
 
-    const profile = await FarmerProfile.findById(id)
-      .populate<{ userId: PopulatedUser }>("userId", "name email mobile")
-      .lean();
+    const response = await fetch(url, { cache: "no-store" }); // මෙතනින් කරන්නේ Server එකට කතා කරන එක
+    if (!response.ok) return null;
 
-    if (!profile || profile.status !== "APPROVED") return null;
-
-    const products = await Product.find({
-      farmerId: (profile.userId as any)._id,
-      status: "APPROVED",
-    })
-      .select("name category basePrice unit stockQty images description tags")
-      .sort({ createdAt: -1 })
-      .lean();
-
-    return {
-      farmer:   JSON.parse(JSON.stringify(profile))   as FarmerData,
-      products: JSON.parse(JSON.stringify(products))  as ProductData[],
-    };
-  } catch {
+    const data = await response.json();
+    return data; // මෙතන තමයි අර { farmer, products } ටික තියෙන්නේ
+  } catch (error) {
     return null;
   }
 }
@@ -212,8 +207,9 @@ function ProductCard({ product }: { product: ProductData }) {
         </div>
 
         {/* Buy button */}
-        <Link
-          href={`/products/${product._id}`}
+        <AddToCartButton
+          product={product}
+          inStock={inStock}
           className={cn(
             "w-full min-h-[48px] rounded-2xl font-bold text-[0.88rem]",
             "flex items-center justify-center gap-2 transition-all duration-200",
@@ -221,10 +217,7 @@ function ProductCard({ product }: { product: ProductData }) {
               ? "bg-gradient-to-br from-[#1A3020] to-[#3E7B27] text-white hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(26,48,32,0.3)]"
               : "bg-[#F0F7F0] text-[#6B8F6E] cursor-not-allowed pointer-events-none",
           )}
-        >
-          <ShoppingCart className="w-4 h-4" />
-          {inStock ? "Buy Now" : "Unavailable"}
-        </Link>
+        />
       </div>
     </div>
   );
@@ -289,18 +282,11 @@ export default async function FarmerProfilePage({
               🌿 Fresh<span className="text-[#F2B441]">Direct</span>
             </Link>
 
-            <Link
-              href="/cart"
-              className="flex items-center gap-1.5 text-[0.85rem] font-semibold text-[#3D5C42] hover:text-[#1A3020] transition-colors"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              <span className="hidden sm:inline">Cart</span>
-            </Link>
+            <CartNavButton />
           </div>
         </nav>
 
         <main className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-8">
-
           {/* ── HERO SECTION ───────────────────────────────────────────────── */}
           <section
             id="farmer-hero"
@@ -350,7 +336,8 @@ export default async function FarmerProfilePage({
                   )}
                   <span className="inline-flex items-center gap-1.5 bg-white/12 border border-white/20 rounded-full px-3 py-1 text-[0.78rem] text-white/80 font-medium">
                     <Star className="w-3 h-3 text-[#F2B441]" />
-                    {products.length} {products.length === 1 ? "Product" : "Products"} Listed
+                    {products.length}{" "}
+                    {products.length === 1 ? "Product" : "Products"} Listed
                   </span>
                 </div>
 
@@ -371,7 +358,6 @@ export default async function FarmerProfilePage({
 
           {/* ── TWO-COLUMN LAYOUT (story + trust) ──────────────────────────── */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
             {/* ── FARM STORY ────────────────────────────────────────────── */}
             <section
               id="farm-story"
@@ -398,7 +384,8 @@ export default async function FarmerProfilePage({
                 </p>
               ) : (
                 <p className="text-[#8FAF9A] italic text-[0.9rem]">
-                  This farmer hasn&apos;t added their story yet. Check back soon!
+                  This farmer hasn&apos;t added their story yet. Check back
+                  soon!
                 </p>
               )}
 
@@ -458,7 +445,8 @@ export default async function FarmerProfilePage({
                 </h2>
               </div>
               <span className="text-[0.78rem] font-semibold text-[#6B8F6E] bg-[#F0F7F0] border border-[#C8DFC8] rounded-full px-3 py-1">
-                {products.length} item{products.length !== 1 ? "s" : ""} available
+                {products.length} item{products.length !== 1 ? "s" : ""}{" "}
+                available
               </span>
             </div>
 
@@ -469,12 +457,13 @@ export default async function FarmerProfilePage({
                   No produce listed yet
                 </p>
                 <p className="text-[#8FAF9A] text-[0.85rem]">
-                  {user.name.split(" ")[0]} hasn&apos;t listed any products yet — check back soon!
+                  {user.name.split(" ")[0]} hasn&apos;t listed any products yet
+                  — check back soon!
                 </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {products.map((product) => (
+                {products.map((product: ProductData) => (
                   <ProductCard key={product._id} product={product} />
                 ))}
               </div>
@@ -504,7 +493,6 @@ export default async function FarmerProfilePage({
               Shop All Produce
             </Link>
           </section>
-
         </main>
       </div>
     </>

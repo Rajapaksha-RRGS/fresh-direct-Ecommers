@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { signOut, useSession } from "next-auth/react";
 import { X, Leaf, LogOut, ChevronRight, Shield } from "lucide-react";
 import { AT, ADMIN_NAV } from "@/constants/adminData";
 import type { AdminPage } from "@/types/admin";
 
-const cn = (...c: (string | boolean | undefined | null)[]) => c.filter(Boolean).join(" ");
+const cn = (...c: (string | boolean | undefined | null)[]) =>
+  c.filter(Boolean).join(" ");
 
 interface AdminSidebarProps {
   currentPage: AdminPage;
@@ -21,6 +23,7 @@ export default function AdminSidebar({
   onMobileClose,
 }: AdminSidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const { data: session } = useSession();
 
   const handleNav = (pageId: AdminPage) => {
     onPageChange(pageId);
@@ -42,7 +45,9 @@ export default function AdminSidebar({
       <div className="px-4 pt-6 pb-5 flex items-center gap-3 border-b border-white/[0.08] relative">
         <div
           className="flex-shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg"
-          style={{ background: `linear-gradient(135deg, ${AT.success}, ${AT.gold})` }}
+          style={{
+            background: `linear-gradient(135deg, ${AT.success}, ${AT.gold})`,
+          }}
         >
           <Leaf className="w-5 h-5 text-white" />
         </div>
@@ -55,7 +60,10 @@ export default function AdminSidebar({
             >
               Fresh Direct
             </p>
-            <p className="text-[11px] font-semibold tracking-wide" style={{ color: AT.gold }}>
+            <p
+              className="text-[11px] font-semibold tracking-wide"
+              style={{ color: AT.gold }}
+            >
               Admin Console
             </p>
           </div>
@@ -75,7 +83,7 @@ export default function AdminSidebar({
       {/* ── Navigation ────────────────────────────────────────────────────── */}
       <nav className="flex-1 px-3 py-5 space-y-1.5 overflow-hidden">
         {ADMIN_NAV.map((item) => {
-          const Icon     = item.icon;
+          const Icon = item.icon;
           const isActive = currentPage === item.id;
 
           return (
@@ -84,7 +92,9 @@ export default function AdminSidebar({
                 onClick={() => handleNav(item.id)}
                 className={cn(
                   "w-full flex items-center transition-all duration-300 ease-in-out relative overflow-hidden",
-                  collapsed ? "justify-center w-12 h-12 mx-auto rounded-2xl" : "gap-3 px-4 py-3 rounded-2xl",
+                  collapsed
+                    ? "justify-center w-12 h-12 mx-auto rounded-2xl"
+                    : "gap-3 px-4 py-3 rounded-2xl",
                   !isActive && "hover:bg-white/[0.08]",
                   isActive && "shadow-lg",
                 )}
@@ -100,7 +110,9 @@ export default function AdminSidebar({
                 <Icon
                   className={cn(
                     "flex-shrink-0 w-5 h-5 transition-colors duration-300",
-                    isActive ? "text-white" : "text-white/50 group-hover:text-white/80",
+                    isActive
+                      ? "text-white"
+                      : "text-white/50 group-hover:text-white/80",
                   )}
                 />
 
@@ -109,7 +121,9 @@ export default function AdminSidebar({
                     <div
                       className={cn(
                         "font-semibold text-sm whitespace-nowrap transition-colors duration-300",
-                        isActive ? "text-white" : "text-white/60 group-hover:text-white/90",
+                        isActive
+                          ? "text-white"
+                          : "text-white/60 group-hover:text-white/90",
                       )}
                     >
                       {item.name}
@@ -123,7 +137,10 @@ export default function AdminSidebar({
                 )}
 
                 {isActive && !collapsed && (
-                  <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: AT.gold }} />
+                  <div
+                    className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                    style={{ background: AT.gold }}
+                  />
                 )}
 
                 {isActive && collapsed && (
@@ -151,8 +168,12 @@ export default function AdminSidebar({
                     transform: "translateY(-50%)",
                   }}
                 >
-                  <div className="font-semibold text-sm text-white">{item.name}</div>
-                  <div className="text-xs text-white/50 mt-0.5">{item.description}</div>
+                  <div className="font-semibold text-sm text-white">
+                    {item.name}
+                  </div>
+                  <div className="text-xs text-white/50 mt-0.5">
+                    {item.description}
+                  </div>
                   <div
                     className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
                     style={{ background: AT.primary }}
@@ -175,17 +196,29 @@ export default function AdminSidebar({
         >
           <div
             className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center shadow-lg"
-            style={{ background: `linear-gradient(135deg, ${AT.success}, ${AT.gold})` }}
+            style={{
+              background: `linear-gradient(135deg, ${AT.success}, ${AT.gold})`,
+            }}
           >
             <Shield className="w-4 h-4 text-white" />
           </div>
-          {!collapsed && (
+          {!collapsed && session && (
             <>
               <div className="flex-1 min-w-0">
-                <p className="text-white text-sm font-semibold truncate">System Administrator</p>
-                <p className="text-white/40 text-[11px] truncate">admin@freshdirect.lk</p>
+                <p className="text-white text-sm font-semibold truncate">
+                  {session?.user?.name}
+                </p>
+                <p className="text-white/40 text-[11px] truncate">
+                  {session?.user?.email}
+                </p>
               </div>
-              <LogOut className="w-4 h-4 text-white/30 flex-shrink-0" />
+              <LogOut
+                className="w-4 h-4 text-white/30 flex-shrink-0"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  signOut({ callbackUrl: "/" });
+                }}
+              />
             </>
           )}
         </div>

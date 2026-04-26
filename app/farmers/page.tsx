@@ -353,8 +353,6 @@ export default function FarmersGalleryPage() {
       {/* ── Sticky Nav ────────────────────────────────────────────────────── */}
       <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur-[12px] border-b border-[#C8DFC8] shadow-[0_2px_12px_rgba(26,48,32,0.06)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          
-
           <Link
             href="/"
             className="flex items-center gap-2 font-extrabold text-[#1A3020] text-[1.05rem]"
@@ -364,7 +362,7 @@ export default function FarmersGalleryPage() {
           </Link>
 
           <Link
-            href="/products"
+            href="/marketplace"
             className="flex items-center gap-1.5 text-[0.85rem] font-semibold text-[#3D5C42] hover:text-[#1A3020] transition-colors min-h-[48px]"
           >
             <span className="hidden sm:inline">Marketplace</span>
@@ -511,10 +509,7 @@ export default function FarmersGalleryPage() {
       </section>
 
       {/* ── Main Content ──────────────────────────────────────────────────── */}
-      <main
-        id="farmers-grid"
-        className="max-w-7xl mx-auto px-4 sm:px-6 py-10"
-      >
+      <main id="farmers-grid" className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         {/* Results count */}
         {!loading && !error && (
           <div className="flex items-center justify-between mb-6">

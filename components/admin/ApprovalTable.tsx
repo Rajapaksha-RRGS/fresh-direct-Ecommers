@@ -9,23 +9,51 @@ const cn = (...c: (string | boolean | undefined | null)[]) => c.filter(Boolean).
 
 interface ApprovalTableProps {
   farmers: PendingFarmer[];
+  /** Called after a farmer is successfully approved or rejected so the
+   *  parent can re-sync analytics stats without a page reload. */
+  onActionSuccess?: (action: "approve" | "reject") => void;
 }
 
 type ActionState = "idle" | "approving" | "rejecting" | "done";
 
-export default function ApprovalTable({ farmers: initial }: ApprovalTableProps) {
-  const [farmers, setFarmers]       = useState<PendingFarmer[]>(initial);
-  const [expanded, setExpanded]     = useState<string | null>(null);
+export default function ApprovalTable({ farmers: initial, onActionSuccess }: ApprovalTableProps) {
+  const [farmers, setFarmers] = useState<PendingFarmer[]>(initial);
+  const [expanded, setExpanded] = useState<string | null>(null);
   const [actionState, setActionState] = useState<Record<string, ActionState>>({});
 
   const handleAction = async (id: string, action: "approve" | "reject") => {
+    // 1. Loading state එක පටන් ගන්නවා
     setActionState((s) => ({ ...s, [id]: action === "approve" ? "approving" : "rejecting" }));
 
-    // Simulate API call — replace with: fetch(`/api/admin/farmers/${id}/status`, ...)
-    await new Promise((r) => setTimeout(r, 900));
+    try {
+      // 2. ඇත්තටම Backend එකට Request එක යවනවා
+      // Route: PATCH /api/admin/farmers/[id]  (see app/api/admin/farmers/[id]/route.ts)
+      const res = await fetch(`/api/admin/farmers/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: action === "approve" ? "APPROVED" : "REJECTED",
+        }),
+      });
 
-    setActionState((s) => ({ ...s, [id]: "done" }));
-    setTimeout(() => setFarmers((f) => f.filter((x) => x.id !== id)), 600);
+      if (!res.ok) throw new Error("Failed to update");
+
+      // 3. සාර්ථක නම් "done" state එකට දානවා
+      setActionState((s) => ({ ...s, [id]: "done" }));
+
+      // 4. Parent dashboard stats refetch trigger (analytics bridge)
+      onActionSuccess?.(action);
+
+      // 5. තත්පර භාගයකට පස්සේ ලිස්ට් එකෙන් ඒ ගොවියව අයින් කරනවා
+      setTimeout(() => {
+        setFarmers((f) => f.filter((x) => x.id !== id));
+      }, 600);
+
+    } catch (err) {
+      console.error("Update Error:", err);
+      alert("මචං වැඩේ වැරදුනා! ආයෙත් උත්සාහ කරන්න.");
+      setActionState((s) => ({ ...s, [id]: "idle" })); // ආපහු තිබුණ තත්ත්වයට ගන්නවා
+    }
   };
 
   if (farmers.length === 0) {
@@ -45,9 +73,9 @@ export default function ApprovalTable({ farmers: initial }: ApprovalTableProps) 
   return (
     <div className="flex flex-col gap-3">
       {farmers.map((f) => {
-        const state    = actionState[f.id] ?? "idle";
-        const isOpen   = expanded === f.id;
-        const isDone   = state === "done";
+        const state = actionState[f.id] ?? "idle";
+        const isOpen = expanded === f.id;
+        const isDone = state === "done";
 
         return (
           <div
@@ -104,7 +132,7 @@ export default function ApprovalTable({ farmers: initial }: ApprovalTableProps) 
                   aria-label="View details"
                 >
                   {isOpen
-                    ? <ChevronUp   className="w-4 h-4" style={{ color: AT.textMid }} />
+                    ? <ChevronUp className="w-4 h-4" style={{ color: AT.textMid }} />
                     : <ChevronDown className="w-4 h-4" style={{ color: AT.textMid }} />}
                 </button>
 

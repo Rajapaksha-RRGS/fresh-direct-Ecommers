@@ -1,13 +1,18 @@
 /**
  * GET /api/farmers
  *
- * Public endpoint — returns all FarmerProfiles whose status === "APPROVED".
- * Sensitive fields (bankDetails, userId.email, etc.) are excluded.
+ * ✅ PUBLIC endpoint — returns all FarmerProfiles whose status === "APPROVED".
+ * No auth required. Sensitive fields (bankDetails, userId.email, etc.) are excluded.
  */
 
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongoose";
 import FarmerProfile from "@/models/FarmerProfile";
+import {
+  successResponseEnglish,
+  errorResponseEnglish,
+} from "@/lib/utils/farmerResponse";
+import { handleEndpointErrorEnglish } from "@/lib/utils/errorHandler";
 
 export async function GET() {
   try {
@@ -27,12 +32,8 @@ export async function GET() {
     // Serialise ObjectIds → strings so Next.js can JSON-encode the response
     const payload = JSON.parse(JSON.stringify(farmers));
 
-    return NextResponse.json({ farmers: payload }, { status: 200 });
+    return successResponseEnglish({ success: true, farmers: payload }, 200);
   } catch (err) {
-    console.error("[GET /api/farmers]", err);
-    return NextResponse.json(
-      { error: "Failed to load farmers" },
-      { status: 500 }
-    );
+    return handleEndpointErrorEnglish(err, "Failed to load farmers");
   }
 }

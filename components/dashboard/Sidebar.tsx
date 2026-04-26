@@ -1,13 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { X, Leaf, LogOut, ChevronRight } from "lucide-react";
 
-import { T, NAV_ITEMS, FARMER } from "@/constants/dashboardData";
+import { T, NAV_ITEMS } from "@/constants/dashboardData";
 import type { Page } from "@/types/dashboard";
 
 const cn = (...classes: (string | boolean | undefined | null)[]) =>
   classes.filter(Boolean).join(" ");
+
+// Helper function to extract initials from a name
+const getInitials = (name: string): string => {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+};
 
 interface SidebarProps {
   currentPage: Page;
@@ -23,6 +33,7 @@ export default function Sidebar({
   onMobileClose,
 }: SidebarProps) {
   const [isExpanded, setIsExpanded] = useState(true);
+  const { data: session } = useSession();
 
   const handleNav = (pageId: Page) => {
     if (!isExpanded) {
@@ -33,6 +44,15 @@ export default function Sidebar({
     }
     onMobileClose();
   };
+
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: "/" });
+  };
+
+  // Dynamic user data from session
+  const userName = session?.user?.name || "Farmer User";
+  const userInitials = getInitials(userName);
+  const userLocation = session?.user?.location || "Farmer Partner";
 
   const panel = (
     <div
@@ -50,17 +70,24 @@ export default function Sidebar({
       <div className="px-4 pt-6 pb-5 flex items-center gap-3 border-b border-white/[0.08] relative">
         <div
           className="flex-shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg"
-          style={{ background: `linear-gradient(135deg, ${T.success}, ${T.gold})` }}
+          style={{
+            background: `linear-gradient(135deg, ${T.success}, ${T.gold})`,
+          }}
         >
           <Leaf className="w-5 h-5 text-white" />
         </div>
 
         {isExpanded && (
           <div className="overflow-hidden flex-1">
-            <p className="text-white font-bold text-base leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <p
+              className="text-white font-bold text-base leading-tight"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
               Fresh Direct
             </p>
-            <p className="text-green-400/70 text-[11px] font-medium tracking-wide">Farmer Portal</p>
+            <p className="text-green-400/70 text-[11px] font-medium tracking-wide">
+              Farmer Portal
+            </p>
           </div>
         )}
 
@@ -78,7 +105,7 @@ export default function Sidebar({
       {/* Navigation */}
       <nav className="flex-1 px-3 py-5 space-y-1.5 overflow-hidden">
         {NAV_ITEMS.map((item) => {
-          const Icon     = item.icon;
+          const Icon = item.icon;
           const isActive = currentPage === item.id;
           return (
             <div key={item.id} className="relative group">
@@ -86,33 +113,67 @@ export default function Sidebar({
                 onClick={() => handleNav(item.id)}
                 className={cn(
                   "w-full flex items-center transition-all duration-300 ease-in-out relative overflow-hidden",
-                  isExpanded ? "gap-3 px-4 py-3 rounded-2xl" : "justify-center w-12 h-12 mx-auto rounded-2xl",
+                  isExpanded
+                    ? "gap-3 px-4 py-3 rounded-2xl"
+                    : "justify-center w-12 h-12 mx-auto rounded-2xl",
                   !isActive && "hover:bg-white/[0.08]",
                   isActive && "shadow-lg",
                 )}
                 style={
                   isActive
-                    ? { background: `linear-gradient(135deg, ${T.success}, rgba(242,180,65,0.12))`, border: `1px solid ${T.success}40` }
+                    ? {
+                        background: `linear-gradient(135deg, ${T.success}, rgba(242,180,65,0.12))`,
+                        border: `1px solid ${T.success}40`,
+                      }
                     : {}
                 }
               >
-                <Icon className={cn("flex-shrink-0 w-5 h-5 transition-colors duration-300", isActive ? "text-white" : "text-white/50 group-hover:text-white/80")} />
+                <Icon
+                  className={cn(
+                    "flex-shrink-0 w-5 h-5 transition-colors duration-300",
+                    isActive
+                      ? "text-white"
+                      : "text-white/50 group-hover:text-white/80",
+                  )}
+                />
 
                 {isExpanded && (
                   <div className="flex-1 text-left overflow-hidden">
-                    <div className={cn("font-semibold text-sm whitespace-nowrap transition-colors duration-300", isActive ? "text-white" : "text-white/60 group-hover:text-white/90")}>
+                    <div
+                      className={cn(
+                        "font-semibold text-sm whitespace-nowrap transition-colors duration-300",
+                        isActive
+                          ? "text-white"
+                          : "text-white/60 group-hover:text-white/90",
+                      )}
+                    >
                       {item.name}
                     </div>
-                    {isActive && <div className="text-[11px] text-white/50 mt-0.5 whitespace-nowrap">{item.description}</div>}
+                    {isActive && (
+                      <div className="text-[11px] text-white/50 mt-0.5 whitespace-nowrap">
+                        {item.description}
+                      </div>
+                    )}
                   </div>
                 )}
 
-                {isActive && isExpanded && <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: T.gold }} />}
+                {isActive && isExpanded && (
+                  <div
+                    className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                    style={{ background: T.gold }}
+                  />
+                )}
 
                 {isActive && !isExpanded && (
                   <>
-                    <div className="absolute inset-0 rounded-2xl opacity-20 animate-pulse" style={{ background: T.success }} />
-                    <div className="absolute -right-0.5 top-1/2 -translate-y-1/2 w-1 h-5 rounded-l-full" style={{ background: T.gold }} />
+                    <div
+                      className="absolute inset-0 rounded-2xl opacity-20 animate-pulse"
+                      style={{ background: T.success }}
+                    />
+                    <div
+                      className="absolute -right-0.5 top-1/2 -translate-y-1/2 w-1 h-5 rounded-l-full"
+                      style={{ background: T.gold }}
+                    />
                   </>
                 )}
               </button>
@@ -120,11 +181,23 @@ export default function Sidebar({
               {!isExpanded && (
                 <div
                   className="absolute left-full ml-4 px-3 py-2 rounded-xl z-50 shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none translate-x-2 group-hover:translate-x-0 transition-all duration-300"
-                  style={{ background: T.primary, border: "1px solid rgba(255,255,255,0.1)", top: "50%", transform: "translateY(-50%)" }}
+                  style={{
+                    background: T.primary,
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                  }}
                 >
-                  <div className="font-semibold text-sm text-white">{item.name}</div>
-                  <div className="text-xs text-white/50 mt-0.5">{item.description}</div>
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45" style={{ background: T.primary }} />
+                  <div className="font-semibold text-sm text-white">
+                    {item.name}
+                  </div>
+                  <div className="text-xs text-white/50 mt-0.5">
+                    {item.description}
+                  </div>
+                  <div
+                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-2 h-2 rotate-45"
+                    style={{ background: T.primary }}
+                  />
                 </div>
               )}
             </div>
@@ -135,19 +208,40 @@ export default function Sidebar({
       {/* Farmer profile */}
       <div className="px-3 pb-5 pt-4 border-t border-white/[0.06]">
         <div
-          className={cn("flex items-center rounded-2xl cursor-pointer hover:bg-white/[0.08] transition-colors duration-200", isExpanded ? "gap-3 px-3 py-2.5" : "justify-center py-2")}
+          className={cn(
+            "flex items-center rounded-2xl cursor-pointer hover:bg-white/[0.08] transition-colors duration-200",
+            isExpanded ? "gap-3 px-3 py-2.5" : "justify-center py-2",
+          )}
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          <div className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm shadow-lg" style={{ background: `linear-gradient(135deg, ${T.success}, ${T.gold})` }}>
-            {FARMER.initials}
+          <div
+            className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm shadow-lg"
+            style={{
+              background: `linear-gradient(135deg, ${T.success}, ${T.gold})`,
+            }}
+          >
+            {userInitials}
           </div>
           {isExpanded && (
             <>
               <div className="flex-1 min-w-0">
-                <p className="text-white text-sm font-semibold truncate">{FARMER.name}</p>
-                <p className="text-white/40 text-[11px] truncate">{FARMER.location}</p>
+                <p className="text-white text-sm font-semibold truncate">
+                  {userName}
+                </p>
+                <p className="text-white/40 text-[11px] truncate">
+                  {userLocation}
+                </p>
               </div>
-              <LogOut className="w-4 h-4 text-white/30 flex-shrink-0" />
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleLogout();
+                }}
+                className="w-4 h-4 text-white/30 flex-shrink-0 hover:text-white/60 transition-colors duration-200"
+                aria-label="Logout"
+              >
+                <LogOut className="w-full h-full" />
+              </button>
             </>
           )}
         </div>

@@ -8,6 +8,8 @@
  *   └── Main area     (flex-1 flex-col h-full overflow-hidden)
  *       ├── Header    (sticky, no scroll)
  *       └── <main>    (flex-1 overflow-y-auto p-6 bg-[#F0F7F0])  ← ONLY thing that scrolls
+ *
+ * NOTE: This dashboard now fetches REAL DATA from API endpoints instead of static data
  */
 
 import { useState } from "react";
@@ -21,62 +23,63 @@ import {
   Search,
   LayoutDashboard,
   TrendingUp,
+  AlertCircle,
 } from "lucide-react";
 
-import AdminSidebar   from "@/components/admin/AdminSidebar";
-import StatCard       from "@/components/admin/StatCard";
-import ApprovalTable  from "@/components/admin/ApprovalTable";
+import AdminSidebar from "@/components/admin/AdminSidebar";
+import StatCard from "@/components/admin/StatCard";
+import ApprovalTable from "@/components/admin/ApprovalTable";
 import PricingConsole from "@/components/admin/PricingConsole";
 
-import { AT, PENDING_FARMERS, PRICING_DATA } from "@/constants/adminData";
+import { AT, PRICING_DATA } from "@/constants/adminData";
 import type { AdminPage, AdminStat } from "@/types/admin";
+import { useAnalytics, useFarmers, useProducts } from "@/hooks/useAdminApi";
 
 // ─── cn ───────────────────────────────────────────────────────────────────────
 const cn = (...c: (string | boolean | undefined | null)[]) => c.filter(Boolean).join(" ");
 
-// ─── Overview Stats ───────────────────────────────────────────────────────────
-const STATS: AdminStat[] = [
-  {
-    label:   "Active Farmers",
-    value:   "142",
-    sub:     "Verified & live on platform",
-    icon:    Users,
-    accent:  `linear-gradient(135deg, ${AT.primary}, ${AT.success})`,
-    trend:   12,
-  },
-  {
-    label:   "Pending Verification",
-    value:   PENDING_FARMERS.length,
-    sub:     "Awaiting admin review",
-    icon:    UserCheck,
-    accent:  `linear-gradient(135deg, #C47A0A, ${AT.gold})`,
-    trend:   null,
-  },
-  {
-    label:   "Today's Revenue",
-    value:   "LKR 84,200",
-    sub:     "Across all farmer sales",
-    icon:    Activity,
-    accent:  `linear-gradient(135deg, #1E6B3C, ${AT.success})`,
-    trend:   8,
-  },
-  {
-    label:   "Market Health",
-    value:   "97%",
-    sub:     "Orders fulfilled on time",
-    icon:    ShoppingBag,
-    accent:  `linear-gradient(135deg, #1A4A6E, #2B6CB0)`,
-    trend:   -2,
-  },
-];
+// ─── Loading skeleton ──────────────────────────────────────────────────────────
+function LoadingSkeleton() {
+  return (
+    <div className="space-y-4 animate-pulse">
+      {[1, 2, 3, 4].map((i) => (
+        <div
+          key={i}
+          className="h-24 rounded-2xl"
+          style={{ background: AT.border + "40" }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ─── Error Alert ──────────────────────────────────────────────────────────────
+function ErrorAlert({ message }: { message: string }) {
+  return (
+    <div
+      className="rounded-2xl p-4 flex items-center gap-3 border"
+      style={{ background: "#FFF5F5", borderColor: "#F2B441" }}
+    >
+      <AlertCircle className="w-5 h-5 flex-shrink-0" style={{ color: "#D94040" }} />
+      <div>
+        <p className="font-bold text-sm" style={{ color: AT.textDark }}>
+          Error loading data
+        </p>
+        <p className="text-xs" style={{ color: AT.textMid }}>
+          {message}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 // ─── Page label map ───────────────────────────────────────────────────────────
 const PAGE_LABELS: Record<AdminPage, { title: string; sub: string }> = {
-  dashboard: { title: "Admin Overview",    sub: "Platform-wide metrics at a glance"        },
-  approvals: { title: "Farmer Approvals",  sub: "Review and verify new farmer applications" },
-  pricing:   { title: "Market Pricing",    sub: "Dynamic pricing engine for all products"  },
-  orders:    { title: "Active Orders",     sub: "Monitor all live marketplace orders"       },
-  users:     { title: "User Management",   sub: "Manage customers, farmers, and admins"     },
+  dashboard: { title: "Admin Overview", sub: "Platform-wide metrics at a glance" },
+  approvals: { title: "Farmer Approvals", sub: "Review and verify new farmer applications" },
+  pricing: { title: "Market Pricing", sub: "Dynamic pricing engine for all products" },
+  orders: { title: "Active Orders", sub: "Monitor all live marketplace orders" },
+  users: { title: "User Management", sub: "Manage customers, farmers, and admins" },
 };
 
 // ─── Coming Soon placeholder ──────────────────────────────────────────────────
@@ -152,11 +155,63 @@ function Section({
 
 // ─── Root Component ───────────────────────────────────────────────────────────
 export default function AdminDashboard() {
-  const [currentPage,    setCurrentPage]    = useState<AdminPage>("dashboard");
+  const [currentPage, setCurrentPage] = useState<AdminPage>("dashboard");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [search,         setSearch]         = useState("");
+  const [search, setSearch] = useState("");
+
+  // Fetch real data from APIs
+  const analytics = useAnalytics();
+  const pendingFarmers = useFarmers("PENDING");
+  const allProducts = useProducts("demandScore", "desc");
+
+  /**
+   * Called by ApprovalTable after every successful approve/reject.
+   * Re-fetches the analytics endpoint so the stat cards reflect the new
+   * Active Farmers count without a page reload.
+   */
+  const handleFarmerAction = () => {
+    analytics.refetch();
+  };
 
   const { title, sub } = PAGE_LABELS[currentPage];
+
+  // Build stats from real data
+  const STATS: AdminStat[] = analytics.data
+    ? [
+        {
+          label: "Active Farmers",
+          value: analytics.data.totalActiveFarmers,
+          sub: "Verified & live on platform",
+          icon: Users,
+          accent: `linear-gradient(135deg, ${AT.primary}, ${AT.success})`,
+          trend: 12,
+        },
+        {
+          label: "Pending Verification",
+          value: analytics.data.pendingApprovals,
+          sub: "Awaiting admin review",
+          icon: UserCheck,
+          accent: `linear-gradient(135deg, #C47A0A, ${AT.gold})`,
+          trend: null,
+        },
+        {
+          label: "Market Liquidity",
+          value: `${analytics.data.marketLiquidity} kg`,
+          sub: "Total stock across all products",
+          icon: Activity,
+          accent: `linear-gradient(135deg, #1E6B3C, ${AT.success})`,
+          trend: 8,
+        },
+        {
+          label: "Revenue Estimates",
+          value: `LKR ${(analytics.data.revenueEstimates / 1000000).toFixed(1)}M`,
+          sub: "Sum of all sales",
+          icon: ShoppingBag,
+          accent: `linear-gradient(135deg, #1A4A6E, #2B6CB0)`,
+          trend: -2,
+        },
+      ]
+    : [];
 
   return (
     <>
@@ -233,12 +288,12 @@ export default function AdminDashboard() {
               style={{ borderColor: AT.border, background: "#fff" }}
             >
               <Bell className="w-5 h-5" style={{ color: AT.textDark }} />
-              {PENDING_FARMERS.length > 0 && (
+              {pendingFarmers.data && pendingFarmers.data.length > 0 && (
                 <span
                   className="absolute -top-1 -right-1 w-5 h-5 rounded-full text-[0.62rem] font-bold text-white flex items-center justify-center"
                   style={{ background: AT.gold }}
                 >
-                  {PENDING_FARMERS.length}
+                  {pendingFarmers.data.length}
                 </span>
               )}
             </button>
@@ -257,7 +312,7 @@ export default function AdminDashboard() {
             className="flex-1 overflow-y-auto p-6"
             style={{ background: AT.bg }}
           >
-            {/* ════════════════ OVERVIEW / DASHBOARD ════════════════════ */}
+            {/* ════════════════ OVERVIEW / DASHBOARD ════════════════════════ */}
             {currentPage === "dashboard" && (
               <div className="flex flex-col gap-6 max-w-7xl mx-auto">
 
@@ -275,16 +330,23 @@ export default function AdminDashboard() {
                     System Administrator
                   </h2>
                   <p className="text-white/60 text-[0.82rem]">
-                    {PENDING_FARMERS.length} farmer{PENDING_FARMERS.length !== 1 ? "s" : ""} awaiting your
-                    verification today.
+                    {pendingFarmers.data
+                      ? `${pendingFarmers.data.length} farmer${pendingFarmers.data.length !== 1 ? "s" : ""} awaiting your verification today.`
+                      : "Loading verification queue..."}
                   </p>
                 </div>
 
                 {/* 4 Stat cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-                  {STATS.map((s) => (
-                    <StatCard key={s.label} stat={s} />
-                  ))}
+                  {analytics.loading ? (
+                    <LoadingSkeleton />
+                  ) : analytics.error ? (
+                    <ErrorAlert message={analytics.error} />
+                  ) : (
+                    STATS.map((s) => (
+                      <StatCard key={s.label} stat={s} />
+                    ))
+                  )}
                 </div>
 
                 {/* Two column: approvals preview + pricing preview */}
@@ -303,7 +365,31 @@ export default function AdminDashboard() {
                       </button>
                     }
                   >
-                    <ApprovalTable farmers={PENDING_FARMERS.slice(0, 2)} />
+                    {pendingFarmers.loading ? (
+                      <LoadingSkeleton />
+                    ) : pendingFarmers.error ? (
+                      <ErrorAlert message={pendingFarmers.error} />
+                    ) : pendingFarmers.data && pendingFarmers.data.length > 0 ? (
+                      <ApprovalTable
+                        farmers={pendingFarmers.data.slice(0, 2).map((f) => ({
+                          id: f._id,
+                          name: f.userName,
+                          nic: f.userNIC,
+                          location: f.location,
+                          farmName: f.farmName,
+                          mobile: f.userMobile,
+                          submittedAt: new Date(f.createdAt)
+                            .toISOString()
+                            .split("T")[0],
+                          cropTypes: f.cropTypes,
+                        }))}
+                        onActionSuccess={handleFarmerAction}
+                      />
+                    ) : (
+                      <p style={{ color: AT.textMid }} className="text-sm">
+                        No pending approvals
+                      </p>
+                    )}
                   </Section>
 
                   <Section
@@ -320,7 +406,29 @@ export default function AdminDashboard() {
                       </button>
                     }
                   >
-                    <PricingConsole rows={PRICING_DATA.slice(0, 4)} />
+                    {allProducts.loading ? (
+                      <LoadingSkeleton />
+                    ) : allProducts.error ? (
+                      <ErrorAlert message={allProducts.error} />
+                    ) : allProducts.data ? (
+                      <PricingConsole
+                        rows={allProducts.data.slice(0, 4).map((p) => ({
+                          id: p._id,
+                          name: p.name,
+                          category: p.category,
+                          basePrice: p.basePrice,
+                          unit: "kg",
+                          supply: p.stockQty,
+                          demand:
+                            p.demandScore > 70
+                              ? "High"
+                              : p.demandScore > 30
+                                ? "Medium"
+                                : "Low",
+                          dynamicPrice: p.currentPrice,
+                        }))}
+                      />
+                    ) : null}
                   </Section>
                 </div>
               </div>
@@ -329,8 +437,7 @@ export default function AdminDashboard() {
             {/* ════════════════ FARMER APPROVALS ════════════════════════ */}
             {currentPage === "approvals" && (
               <div className="max-w-5xl mx-auto">
-                {/* Pending count banner */}
-                {PENDING_FARMERS.length > 0 && (
+                {pendingFarmers.data && pendingFarmers.data.length > 0 && (
                   <div
                     className="rounded-3xl p-4 mb-6 flex items-center gap-3 border shadow-[0_4px_16px_rgba(242,180,65,0.15)]"
                     style={{ background: "#FFFBEE", borderColor: `${AT.gold}50` }}
@@ -342,8 +449,12 @@ export default function AdminDashboard() {
                       <UserCheck className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <p className="font-bold text-[0.88rem]" style={{ color: AT.textDark }}>
-                        {PENDING_FARMERS.length} Application{PENDING_FARMERS.length !== 1 ? "s" : ""} Awaiting Review
+                      <p
+                        className="font-bold text-[0.88rem]"
+                        style={{ color: AT.textDark }}
+                      >
+                        {pendingFarmers.data.length} Application
+                        {pendingFarmers.data.length !== 1 ? "s" : ""} Awaiting Review
                       </p>
                       <p className="text-[0.75rem]" style={{ color: AT.textLight }}>
                         Use Approve / Reject on each row. Status updates are instant.
@@ -357,7 +468,27 @@ export default function AdminDashboard() {
                   sub="Review NIC, location, and crop profile before approving"
                   icon={UserCheck}
                 >
-                  <ApprovalTable farmers={PENDING_FARMERS} />
+                  {pendingFarmers.loading ? (
+                    <LoadingSkeleton />
+                  ) : pendingFarmers.error ? (
+                    <ErrorAlert message={pendingFarmers.error} />
+                  ) : pendingFarmers.data ? (
+                    <ApprovalTable
+                      farmers={pendingFarmers.data.map((f) => ({
+                        id: f._id,
+                        name: f.userName,
+                        nic: f.userNIC,
+                        location: f.location,
+                        farmName: f.farmName,
+                        mobile: f.userMobile,
+                        submittedAt: new Date(f.createdAt)
+                          .toISOString()
+                          .split("T")[0],
+                        cropTypes: f.cropTypes,
+                      }))}
+                      onActionSuccess={handleFarmerAction}
+                    />
+                  ) : null}
                 </Section>
               </div>
             )}
@@ -378,7 +509,8 @@ export default function AdminDashboard() {
                   <p className="text-[0.82rem]" style={{ color: AT.textMid }}>
                     Dynamic prices are computed from{" "}
                     <strong>supply availability</strong> and{" "}
-                    <strong>demand signals</strong>. High demand + low supply = premium pricing.
+                    <strong>demand signals</strong>. High demand + low supply = premium
+                    pricing.
                   </p>
                 </div>
 
@@ -387,7 +519,29 @@ export default function AdminDashboard() {
                   sub="All approved products with real-time demand adjustment"
                   icon={TrendingUp}
                 >
-                  <PricingConsole rows={PRICING_DATA} />
+                  {allProducts.loading ? (
+                    <LoadingSkeleton />
+                  ) : allProducts.error ? (
+                    <ErrorAlert message={allProducts.error} />
+                  ) : allProducts.data ? (
+                    <PricingConsole
+                      rows={allProducts.data.map((p) => ({
+                        id: p._id,
+                        name: p.name,
+                        category: p.category,
+                        basePrice: p.basePrice,
+                        unit: "kg",
+                        supply: p.stockQty,
+                        demand:
+                          p.demandScore > 70
+                            ? "High"
+                            : p.demandScore > 30
+                              ? "Medium"
+                              : "Low",
+                        dynamicPrice: p.currentPrice,
+                      }))}
+                    />
+                  ) : null}
                 </Section>
               </div>
             )}

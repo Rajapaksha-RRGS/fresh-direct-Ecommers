@@ -14,9 +14,9 @@ const FRESH_DIRECT_ITEMS = [
 
 export default function ProblemSolution() {
   return (
-    <section id="problem-solution" className="py-10 lg:py-10 px-6 bg-white">
-      <div className="max-w-7xl mx-auto px-2 w-full">
-        <div className="text-center mb-2 lg:mb-8">
+    <section id="problem-solution" className="py-16 lg:py-32 px-6 bg-white">
+      <div className="max-w-7xl mx-auto px-6 w-full">
+        <div className="text-center mb-12 lg:mb-24">
           <span className="text-[0.8rem] font-bold uppercase tracking-[0.14em] inline-block mb-3 text-[#2D6A4F]">
             The Problem
           </span>
@@ -30,7 +30,7 @@ export default function ProblemSolution() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-5 lg:gap-12 items-stretch p-2.5">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 lg:gap-12 items-stretch">
           {/* Old Way */}
           <div className="bg-[#FFF5F5] border-2 border-[#FFD0D0] rounded-[24px] p-8 lg:p-12">
             <h3 className="font-extrabold text-[#C53030] text-[1.1rem] mb-8 flex items-center gap-2">
@@ -68,7 +68,7 @@ export default function ProblemSolution() {
           </div>
 
           {/* Fresh Direct Way */}
-          <div className="bg-[#F0FBF1] border-2 border-[#D0EDD8] rounded-[24px] p-5 lg:p-8">
+          <div className="bg-[#F0FBF1] border-2 border-[#D0EDD8] rounded-[24px] p-8 lg:p-12">
             <h3 className="font-extrabold text-[#2D6A4F] text-[1.1rem] mb-8 flex items-center gap-2">
               <span className="w-8 h-8 rounded-full bg-[#D8F3DC] flex items-center justify-center text-sm flex-shrink-0">
                 ✅

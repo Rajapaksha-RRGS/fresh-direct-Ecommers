@@ -76,11 +76,14 @@ const UserSchema = new Schema<IUser>(
 );
 
 // ─── Indexes ──────────────────────────────────────────────────────────────────
-UserSchema.index({ email: 1 });
+// NOTE: email, nic, mobile are already unique: true in schema definition,
+// so no need to add them again here (prevents duplicate index warnings)
 UserSchema.index({ role: 1 });
+UserSchema.index({ isActive: 1 });
 
 // ─── Model ────────────────────────────────────────────────────────────────────
 const User: Model<IUser> =
   mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
 
 export default User;
+

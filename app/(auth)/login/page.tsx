@@ -1,11 +1,14 @@
 "use client";
 
 // ─── Login Page — uses lib/auth.ts (Google + Credentials via next-auth/react) ─
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export default function LoginPage() {
+  const { data: session } = useSession();
+  const router = useRouter();
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isEmailLoading, setIsEmailLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -13,14 +16,37 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  // Role-based redirect helper
+  const redirectByRole = (role: string | undefined) => {
+    if (role === "ADMIN") {
+      router.push("/admin");
+    } else if (role === "FARMER") {
+      router.push("/FamerDashbord");
+    } else {
+      router.push("/");
+    }
+  };
+
+  // Redirect after session updates (Google or Email sign-in)
+  useEffect(() => {
+    if (session?.user?.email) {
+      redirectByRole((session.user as any).role);
+    }
+  }, [session]);
+
   // ─── Google OAuth (Google provider from lib/auth.ts) ──────────────────────
   const handleGoogleSignIn = async () => {
     try {
       setIsGoogleLoading(true);
       setError("");
-      await signIn("google", { callbackUrl: "/" });
-    } catch {
-      setError("Google sign-in failed. Please try again.");
+      // Removed redirect: false so NextAuth automatically routes via window.location to Google Consent
+      await signIn("google");
+
+      // Execution halts here as NextAuth securely redirects. 
+      // Any errors will fire a bounce-back to this page appending ?error=...
+    } catch (err: any) {
+      console.error("Google sign-in exception:", err);
+      setError(`Google sign-in failed: ${err.message || "Unknown error"}`);
       setIsGoogleLoading(false);
     }
   };
@@ -38,7 +64,7 @@ export default function LoginPage() {
       const result = await signIn("credentials", {
         email,
         password,
-        redirect: false,   // handle redirect manually
+        redirect: false, // handle redirect manually
       });
 
       if (result?.error) {
@@ -47,8 +73,11 @@ export default function LoginPage() {
         return;
       }
 
-      // Redirect on success
-      window.location.href = "/products";
+      // Fetch session to get role and redirect accordingly
+      const updatedSession = await fetch("/api/auth/session").then((res) =>
+        res.json(),
+      );
+      redirectByRole(updatedSession?.user?.role);
     } catch {
       setError("Sign-in failed. Please try again.");
       setIsEmailLoading(false);

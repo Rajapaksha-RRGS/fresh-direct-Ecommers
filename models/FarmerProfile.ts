@@ -96,9 +96,11 @@ const FarmerProfileSchema = new Schema<IFarmerProfile>(
 );
 
 // ─── Indexes ──────────────────────────────────────────────────────────────────
-FarmerProfileSchema.index({ userId: 1 });
+// NOTE: userId is already unique: true in schema definition,
+// so no need to add it again here (prevents duplicate index warnings)
 FarmerProfileSchema.index({ status: 1 });
 FarmerProfileSchema.index({ isVerified: 1 });
+FarmerProfileSchema.index({ createdAt: -1 }); // For sorting by newest first
 
 // ─── Model ────────────────────────────────────────────────────────────────────
 const FarmerProfile: Model<IFarmerProfile> =
