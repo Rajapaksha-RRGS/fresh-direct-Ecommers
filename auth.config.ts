@@ -21,6 +21,7 @@ export const authConfig = {
   session: {
     strategy: "jwt",
   },
+  //pdfyutuijfjf
 
   pages: {
     signIn: "/login",
