@@ -124,7 +124,7 @@ export default function UserMenu() {
           "transition-all duration-200 whitespace-nowrap",
         ].join(" ")}
       >
-        ඇතුළු වන්න&nbsp;/&nbsp;Sign In
+        Sign In
       </Link>
     );
   }

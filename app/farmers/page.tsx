@@ -10,6 +10,7 @@
 
 import Link from "next/link";
 import { useEffect, useState, useMemo, useCallback } from "react";
+
 import {
   Search,
   MapPin,
@@ -22,6 +23,8 @@ import {
   Sprout,
   RefreshCw,
 } from "lucide-react";
+import { Footer } from "@/components/home";
+import Navbar from "@/components/layout/Navbar";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface FarmerCard {
@@ -351,68 +354,54 @@ export default function FarmersGalleryPage() {
       />
 
       {/* ── Sticky Nav ────────────────────────────────────────────────────── */}
-      <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur-[12px] border-b border-[#C8DFC8] shadow-[0_2px_12px_rgba(26,48,32,0.06)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-2 font-extrabold text-[#1A3020] text-[1.05rem]"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-          >
-            🌿 Fresh<span className="text-[#F2B441]">Direct</span>
-          </Link>
-
-          <Link
-            href="/marketplace"
-            className="flex items-center gap-1.5 text-[0.85rem] font-semibold text-[#3D5C42] hover:text-[#1A3020] transition-colors min-h-[48px]"
-          >
-            <span className="hidden sm:inline">Marketplace</span>
-          </Link>
-        </div>
-      </nav>
+      
+      <Navbar/>
 
       {/* ── Hero Banner ───────────────────────────────────────────────────── */}
-      <header className="relative bg-gradient-to-br from-[#1A3020] via-[#2D6A4F] to-[#3E7B27] overflow-hidden">
-        {/* Decorative glows */}
-        <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-white/5 pointer-events-none" />
-        <div className="absolute bottom-0 -left-16 w-60 h-60 rounded-full bg-[rgba(242,180,65,0.06)] pointer-events-none" />
+      <header className="relative bg-gradient-to-br from-[#F0FBF1] via-[#D8F3DC] to-[#B7E4C7] overflow-hidden">
+  {/* Decorative glows (පැහැදිලිව පෙනීම සඳහා මේවායේ opacity එක පොඩ්ඩක් වැඩි කළා) */}
+  <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#2D6A4F]/5 pointer-events-none" />
+  <div className="absolute bottom-0 -left-16 w-60 h-60 rounded-full bg-[#FFB703]/10 pointer-events-none" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-20 text-center">
-          {/* Eyebrow */}
-          <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/80 text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-            <Leaf className="w-3.5 h-3.5" />
-            Sri Lanka&apos;s Verified Farm Network
-          </span>
+  <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-20 text-center">
+    {/* Eyebrow - මෙහි background එක සහ text color එක ලා කොළ පාටට ගැළපෙන්න වෙනස් කළා */}
+    <span className="inline-flex items-center gap-2 bg-white/80 border border-[#D0EDD8] text-[#2D6A4F] text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4 shadow-sm">
+      <Leaf className="w-3.5 h-3.5" />
+      Sri Lanka&apos;s Verified Farm Network
+    </span>
 
-          {/* Heading */}
-          <h1
-            className="text-3xl sm:text-5xl font-extrabold text-white leading-tight mb-4"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-          >
-            Meet Your <span className="text-[#F2B441]">Farmers</span>
-          </h1>
-          <p className="text-white/70 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Every farmer here is verified, approved, and passionate about
-            growing clean food for your family. Browse profiles and connect
-            directly with the source.
-          </p>
+    {/* Heading - අකුරු වල පාට තද කොළ (#1B4332) කළා එවිට ලා පසුබිමේ හොඳින් පෙනේ */}
+    <h1
+      className="text-3xl sm:text-5xl font-extrabold text-[#1B4332] leading-tight mb-4"
+      style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+    >
+      Meet Your <span className="text-[#FFB703]">Farmers</span>
+    </h1>
+    
+    {/* Paragraph text color එකත් වෙනස් කළා */}
+    <p className="text-[#4A6355] text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+      Every farmer here is verified, approved, and passionate about
+      growing clean food for your family. Browse profiles and connect
+      directly with the source.
+    </p>
 
-          {/* Stat pills */}
-          <div className="flex flex-wrap gap-3 justify-center mt-8">
-            <div className="flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-sm text-white font-semibold">
-              <Users className="w-4 h-4 text-[#F2B441]" />
-              {loading ? "—" : `${farmers.length} Verified Farmers`}
-            </div>
-            <div className="flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-sm text-white font-semibold">
-              <MapPin className="w-4 h-4 text-[#F2B441]" />
-              25 Districts Covered
-            </div>
-            <div className="flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-sm text-white font-semibold">
-              <ShieldCheck className="w-4 h-4 text-[#F2B441]" />
-              100% Approved Only
-            </div>
-          </div>
-        </div>
-      </header>
+    {/* Stat pills - මේවායේ background සහ border Hero section එකට ගැළපෙන ලෙස සකස් කළා */}
+    <div className="flex flex-wrap gap-3 justify-center mt-8">
+      <div className="flex items-center gap-2 bg-white/90 border border-[#D0EDD8] rounded-full px-4 py-2 text-sm text-[#2D6A4F] font-semibold shadow-sm">
+        <Users className="w-4 h-4 text-[#FFB703]" />
+        {loading ? "—" : `${farmers.length} Verified Farmers`}
+      </div>
+      <div className="flex items-center gap-2 bg-white/90 border border-[#D0EDD8] rounded-full px-4 py-2 text-sm text-[#2D6A4F] font-semibold shadow-sm">
+        <MapPin className="w-4 h-4 text-[#FFB703]" />
+        25 Districts Covered
+      </div>
+      <div className="flex items-center gap-2 bg-white/90 border border-[#D0EDD8] rounded-full px-4 py-2 text-sm text-[#2D6A4F] font-semibold shadow-sm">
+        <ShieldCheck className="w-4 h-4 text-[#FFB703]" />
+        100% Approved Only
+      </div>
+    </div>
+  </div>
+</header>
 
       {/* ── Filter Bar ────────────────────────────────────────────────────── */}
       <section
@@ -622,6 +611,8 @@ export default function FarmersGalleryPage() {
           </div>
         </div>
       </footer>
+      
+      <Footer/>
     </div>
   );
 }
