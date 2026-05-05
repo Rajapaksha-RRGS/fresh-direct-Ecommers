@@ -15,6 +15,8 @@ import type {
   ProductOverviewItem,
   PricingConfigData,
 } from "@/types/adminApi";
+import type { PricingRow } from "@/types/admin";
+import type { GetPricingCalculateResponse } from "@/app/api/admin/pricing/calculate/route";
 
 // ─── Generic fetch hook ──────────────────────────────────────────────────────
 
@@ -204,8 +206,75 @@ export function usePricingConfig() {
 }
 
 /**
- * Hook: Update pricing configuration (mutation)
+ * Hook: Fetch live dynamic-pricing rows from /api/admin/pricing/calculate
+ *
+ * Returns all the usual data/loading/error fields PLUS a `refetch()` function.
+ * Call `refetch()` after the admin tweaks sensitivity factors so the table
+ * re-computes without a full page reload.
  */
+export function usePricingCalculate() {
+  const [state, setState] = useState<{
+    data: PricingRow[] | null;
+    meta: GetPricingCalculateResponse["meta"] | null;
+    loading: boolean;
+    error: string | null;
+  }>({
+    data: null,
+    meta: null,
+    loading: true,
+    error: null,
+  });
+
+  const [refetchKey, setRefetchKey] = useState(0);
+
+  useEffect(() => {
+    const fetchPricing = async () => {
+      try {
+        setState((prev) => ({ ...prev, loading: true, error: null }));
+
+        const res = await fetch("/api/admin/pricing/calculate");
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || "Failed to fetch pricing data");
+        }
+
+        const result: GetPricingCalculateResponse = await res.json();
+
+        // Map API rows → PricingRow (UI type)
+        const rows: PricingRow[] = result.data.map((r) => ({
+          id:           r.id,
+          name:         r.name,
+          category:     r.category,
+          unit:         r.unit,
+          basePrice:    r.basePrice,
+          dynamicPrice: r.dynamicPrice,
+          supply:       r.supply,
+          supplyMax:    r.supplyMax,
+          supplyPct:    r.supplyPct,
+          demand:       r.demand,
+        }));
+
+        setState({ data: rows, meta: result.meta, loading: false, error: null });
+      } catch (err) {
+        setState((prev) => ({
+          ...prev,
+          loading: false,
+          error: err instanceof Error ? err.message : "Unknown error",
+        }));
+      }
+    };
+
+    fetchPricing();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refetchKey]);
+
+  const refetch = () => setRefetchKey((k) => k + 1);
+
+  return { ...state, refetch };
+}
+
+
 export function useUpdatePricingConfig() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

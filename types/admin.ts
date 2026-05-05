@@ -40,7 +40,9 @@ export interface PricingRow {
   category: string;
   basePrice: number;
   unit: string;
-  supply: number;     // kg available in platform
+  supply: number;      // raw stockQty
+  supplyMax: number;   // highest stockQty across all products (denominator)
+  supplyPct: number;   // 0–100 percentage for the progress bar
   demand: DemandLevel;
   dynamicPrice: number;
 }

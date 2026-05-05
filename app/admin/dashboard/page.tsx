@@ -33,7 +33,8 @@ import PricingConsole from "@/components/admin/PricingConsole";
 
 import { AT, PRICING_DATA } from "@/constants/adminData";
 import type { AdminPage, AdminStat } from "@/types/admin";
-import { useAnalytics, useFarmers, useProducts } from "@/hooks/useAdminApi";
+import { useAnalytics, useFarmers, useProducts, usePricingCalculate } from "@/hooks/useAdminApi";
+
 
 // ─── cn ───────────────────────────────────────────────────────────────────────
 const cn = (...c: (string | boolean | undefined | null)[]) => c.filter(Boolean).join(" ");
@@ -163,6 +164,8 @@ export default function AdminDashboard() {
   const analytics = useAnalytics();
   const pendingFarmers = useFarmers("PENDING");
   const allProducts = useProducts("demandScore", "desc");
+  const pricingCalc = usePricingCalculate();
+
 
   /**
    * Called by ApprovalTable after every successful approve/reject.
@@ -406,27 +409,14 @@ export default function AdminDashboard() {
                       </button>
                     }
                   >
-                    {allProducts.loading ? (
+                    {pricingCalc.loading ? (
                       <LoadingSkeleton />
-                    ) : allProducts.error ? (
-                      <ErrorAlert message={allProducts.error} />
-                    ) : allProducts.data ? (
+                    ) : pricingCalc.error ? (
+                      <ErrorAlert message={pricingCalc.error} />
+                    ) : pricingCalc.data ? (
                       <PricingConsole
-                        rows={allProducts.data.slice(0, 4).map((p) => ({
-                          id: p._id,
-                          name: p.name,
-                          category: p.category,
-                          basePrice: p.basePrice,
-                          unit: "kg",
-                          supply: p.stockQty,
-                          demand:
-                            p.demandScore > 70
-                              ? "High"
-                              : p.demandScore > 30
-                                ? "Medium"
-                                : "Low",
-                          dynamicPrice: p.currentPrice,
-                        }))}
+                        rows={pricingCalc.data.slice(0, 4)}
+                        onRefresh={pricingCalc.refetch}
                       />
                     ) : null}
                   </Section>
@@ -519,27 +509,14 @@ export default function AdminDashboard() {
                   sub="All approved products with real-time demand adjustment"
                   icon={TrendingUp}
                 >
-                  {allProducts.loading ? (
+                  {pricingCalc.loading ? (
                     <LoadingSkeleton />
-                  ) : allProducts.error ? (
-                    <ErrorAlert message={allProducts.error} />
-                  ) : allProducts.data ? (
+                  ) : pricingCalc.error ? (
+                    <ErrorAlert message={pricingCalc.error} />
+                  ) : pricingCalc.data ? (
                     <PricingConsole
-                      rows={allProducts.data.map((p) => ({
-                        id: p._id,
-                        name: p.name,
-                        category: p.category,
-                        basePrice: p.basePrice,
-                        unit: "kg",
-                        supply: p.stockQty,
-                        demand:
-                          p.demandScore > 70
-                            ? "High"
-                            : p.demandScore > 30
-                              ? "Medium"
-                              : "Low",
-                        dynamicPrice: p.currentPrice,
-                      }))}
+                      rows={pricingCalc.data}
+                      onRefresh={pricingCalc.refetch}
                     />
                   ) : null}
                 </Section>
