@@ -21,7 +21,7 @@ export async function GET() {
     await connectDB();
 
     // ── 1. Fetch all approved products ──────────────────────────────────────
-    const products = await Product.find({ status: "APPROVED" })
+    const products = await Product.find({ })
       .populate("farmerId", "name") // only expose farmer's display name
       .lean();
 

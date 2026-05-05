@@ -32,6 +32,7 @@ import {
 
 import { useCartStore } from "@/store/cartStore";
 import CartDrawer from "@/components/marketplace/CartDrawer";
+import Navbar from "@/components/layout/Navbar";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Product {
@@ -335,6 +336,8 @@ export default function MarketplacePage() {
         rel="stylesheet"
       />
 
+      
+
       {/* ── Cart Drawer (global) ── */}
       <CartDrawer />
 
@@ -400,6 +403,7 @@ export default function MarketplacePage() {
           </button>
         </div>
       </header>
+      
 
       {/* ── Category Pill Scroller ────────────────────────────────────────── */}
       <div className="fixed top-16 left-0 right-0 z-20 bg-white/95 backdrop-blur-[10px] border-b border-[#E4EEE4] shadow-[0_1px_6px_rgba(26,48,32,0.05)]">
