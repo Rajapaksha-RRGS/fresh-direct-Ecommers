@@ -651,7 +651,7 @@ function SuccessScreen() {
       </p>
       <div className="flex flex-col gap-3">
         <Link
-          href="/FamerDashbord"
+          href="/"
           className={cn(
             "w-full py-3.5 bg-gradient-to-br from-[#1A3020] to-[#3E7B27] text-white",
             "rounded-2xl font-bold text-[0.95rem] flex items-center justify-center gap-2",
@@ -660,14 +660,9 @@ function SuccessScreen() {
           )}
         >
           <Leaf className="w-4 h-4" />
-          Go to My Dashboard
+          Back to fresh Direct Home
         </Link>
-        <Link
-          href="/"
-          className="text-[0.85rem] text-[#4A6355] hover:text-[#1B4332] font-medium transition-colors"
-        >
-          ← Back to FreshDirect home
-        </Link>
+        
       </div>
     </div>
   );
@@ -889,15 +884,7 @@ export default function FarmerRegisterPage() {
             </p>
           )}
 
-          <div className="flex justify-center mt-3">
-            <Link
-              href="/"
-              id="back-to-home"
-              className="inline-flex items-center gap-1.5 text-[0.82rem] text-[#4A6355] no-underline font-medium hover:text-[#1B4332] transition-colors"
-            >
-              ← Back to FreshDirect
-            </Link>
-          </div>
+          
         </div>
       </div>
     </div>
