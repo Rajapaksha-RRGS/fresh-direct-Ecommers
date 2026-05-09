@@ -13,6 +13,7 @@ export interface CartItem {
   id: string;            // product _id
   name: string;
   farmerName: string;
+  farmerId: string;      // farmer's MongoDB ObjectId
   unit: string;
   currentPrice: number;
   image?: string;

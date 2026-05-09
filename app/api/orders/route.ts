@@ -73,8 +73,13 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true, orderId: newOrder._id }, { status: 201 });
-  } catch (err: any) {
-    console.error("Error processing order:", err);
-    return NextResponse.json({ error: "Failed to place order. Please try again later." }, { status: 500 });
-  }
+  }  catch (err: any) {
+    // මේක දාලා බලන්න Terminal එකේ මොකක්ද වැටෙන්නේ කියලා
+    console.log("FULL ERROR DETAILS:", err); 
+    
+    return NextResponse.json({ 
+        error: "Failed to place order.",
+        details: err.message // මේකෙන් error එකේ විස්තරය response එකේම එවයි
+    }, { status: 500 });
+}
 }

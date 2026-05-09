@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
       {
         success: false,
         message: "Failed to fetch pricing configuration",
-        messageNL: "මිල ගණන් වින්‍යාසය ලබා ගැනීම අසफල විය",
+        
       },
       { status: 500 }
     );
@@ -95,8 +95,7 @@ export async function PATCH(req: NextRequest) {
           {
             success: false,
             message: "Demand sensitivity must be a number between 0 and 1",
-            messageNL:
-              "ඉල්ලුම සංවේදනශීලතා 0 සහ 1 අතර සංඛ්‍යා විය යුතුයි",
+            
           },
           { status: 400 }
         );
@@ -113,8 +112,7 @@ export async function PATCH(req: NextRequest) {
           {
             success: false,
             message: "Supply sensitivity must be a number between 0 and 1",
-            messageNL:
-              "සরবراज සංවේදනශීලතා 0 සහ 1 අතර සංඛ්‍යා විය යුතුයි",
+            
           },
           { status: 400 }
         );
@@ -150,7 +148,7 @@ export async function PATCH(req: NextRequest) {
       {
         success: true,
         message: "Pricing configuration updated successfully",
-        messageNL: "මිල ගණන් වින්‍යාසය සফලව යාවත්කාලීන කරන ලදි",
+        
         data: {
           demandSensitivity: config.demandSensitivity,
           supplySensitivity: config.supplySensitivity,
@@ -165,7 +163,7 @@ export async function PATCH(req: NextRequest) {
       {
         success: false,
         message: "Failed to update pricing configuration",
-        messageNL: "මිල ගණන් වින්‍යාසය යාවත්කාලීන කිරීම අසफල විය",
+        
       },
       { status: 500 }
     );
