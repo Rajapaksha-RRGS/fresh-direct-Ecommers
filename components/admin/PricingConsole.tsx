@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { RefreshCw } from "lucide-react";
 import { AT } from "@/constants/adminData";
 import type { PricingRow, DemandLevel } from "@/types/admin";
@@ -48,8 +48,8 @@ function SupplyBar({ pct, qty, unit }: { pct: number; qty: number; unit: string 
     pct >= 60
       ? "linear-gradient(90deg, #3E7B27, #5AA832)"
       : pct >= 30
-      ? "linear-gradient(90deg, #D97706, #F59E0B)"
-      : "linear-gradient(90deg, #DC2626, #F87171)";
+        ? "linear-gradient(90deg, #D97706, #F59E0B)"
+        : "linear-gradient(90deg, #DC2626, #F87171)";
 
   return (
     <div className="flex flex-col gap-1 min-w-[90px]">
@@ -113,7 +113,7 @@ function PriceCell({ row }: { row: PricingRow }) {
   const delta = row.dynamicPrice - row.basePrice;
   const increased = delta > 0;
   const decreased = delta < 0;
-  const neutral  = delta === 0;
+  const neutral = delta === 0;
 
   return (
     <div className="flex flex-col items-end gap-0.5">
@@ -151,7 +151,7 @@ function PriceCell({ row }: { row: PricingRow }) {
           className="text-[0.65rem] font-bold px-2 py-0.5 rounded-lg"
           style={{
             background: increased ? "#FEE2E2" : "#DCFCE7",
-            color:      increased ? "#991B1B" : "#166534",
+            color: increased ? "#991B1B" : "#166534",
           }}
         >
           {increased ? "+" : ""}
@@ -176,8 +176,13 @@ export default function PricingConsole({
   rows: initial,
   onRefresh,
 }: PricingConsoleProps) {
-  const [rows] = useState<PricingRow[]>(initial);
+  const [rows, setRows] = useState<PricingRow[]>(initial);
   const [refreshing, setRefreshing] = useState(false);
+
+  // Sync internal rows whenever the parent provides an updated prop
+  useEffect(() => {
+    setRows(initial);
+  }, [initial]);
 
   const handleRefresh = async () => {
     setRefreshing(true);

@@ -267,7 +267,7 @@ export default async function FarmerProfilePage({
         <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur-[12px] border-b border-[#C8DFC8] shadow-[0_2px_12px_rgba(26,48,32,0.06)]">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
             <Link
-              href="/products"
+              href="/marketplace"
               className="flex items-center gap-1.5 text-[0.85rem] font-semibold text-[#3D5C42] hover:text-[#1A3020] transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />

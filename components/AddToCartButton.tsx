@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useCart } from "@/context/CartContext";
 import { ShoppingCart } from "lucide-react";
 
@@ -19,13 +21,24 @@ interface AddToCartButtonProps {
 }
 
 export default function AddToCartButton({ product, className, inStock }: AddToCartButtonProps) {
-  const { addToCart } = useCart();
+  const { status } = useSession();
+  const { addToCart, openDrawer } = useCart();
+  const router = useRouter();
+  const pathname = usePathname();
   const [added, setAdded] = React.useState(false);
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
+
     if (!inStock) return;
-    
+
+    // ── Not signed in → redirect to login, come back to this page after ──
+    if (status !== "authenticated") {
+      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
+      return;
+    }
+
+    // ── Signed in → add to cart + open cart drawer ──
     addToCart({
       productId: product._id,
       farmerId: product.farmerId,
@@ -36,7 +49,9 @@ export default function AddToCartButton({ product, className, inStock }: AddToCa
       quantity: 1,
       stockQty: product.stockQty,
     });
-    
+
+    openDrawer?.();
+
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -44,11 +59,17 @@ export default function AddToCartButton({ product, className, inStock }: AddToCa
   return (
     <button
       onClick={handleAdd}
-      disabled={!inStock}
+      disabled={!inStock || status === "loading"}
       className={className}
     >
       <ShoppingCart className="w-4 h-4" />
-      {inStock ? (added ? "Added!" : "Buy Now") : "Unavailable"}
+      {inStock
+        ? added
+          ? "Added!"
+          : status === "loading"
+          ? "..."
+          : "Buy Now"
+        : "Unavailable"}
     </button>
   );
 }

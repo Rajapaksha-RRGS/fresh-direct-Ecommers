@@ -61,7 +61,7 @@ function ErrorAlert({ message }: { message: string }) {
       className="rounded-2xl p-4 flex items-center gap-3 border"
       style={{ background: "#FFF5F5", borderColor: "#F2B441" }}
     >
-      <AlertCircle className="w-5 h-5 flex-shrink-0" style={{ color: "#D94040" }} />
+      <AlertCircle className="w-5 h-5 shrink-0" style={{ color: "#D94040" }} />
       <div>
         <p className="font-bold text-sm" style={{ color: AT.textDark }}>
           Error loading data
@@ -223,7 +223,7 @@ export default function AdminDashboard() {
 
       {/* ── Root: h-screen, no page-level scroll ────────────────────────── */}
       <div
-        className="flex h-screen overflow-hidden w-full"
+        className="dashboard-root flex h-screen overflow-hidden w-full"
         style={{ background: AT.bg, fontFamily: "'Inter', sans-serif" }}
       >
         {/* ── Sidebar (h-full, no scroll) ──────────────────────────────── */}
@@ -239,7 +239,7 @@ export default function AdminDashboard() {
 
           {/* ── Sticky Header ──────────────────────────────────────────── */}
           <header
-            className="flex items-center gap-4 px-5 py-4 border-b flex-shrink-0"
+            className="sticky top-0 z-20 flex items-center gap-4 px-5 py-4 border-b shrink-0"
             style={{
               background: "rgba(255,255,255,0.92)",
               backdropFilter: "blur(12px)",
@@ -271,23 +271,23 @@ export default function AdminDashboard() {
 
             {/* Search */}
             <div
-              className="hidden md:flex items-center gap-2 px-3.5 py-2 rounded-2xl border flex-shrink-0"
+              className="hidden md:flex items-center gap-2 px-3.5 py-2 rounded-2xl border shrink-0"
               style={{ background: AT.bg, borderColor: AT.border }}
             >
-              <Search className="w-4 h-4 flex-shrink-0" style={{ color: AT.textLight }} />
+              <Search className="w-4 h-4 shrink-0" style={{ color: AT.textLight }} />
               <input
                 type="text"
                 placeholder="Search farmers, orders…"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="bg-transparent outline-none text-[0.82rem] w-44 placeholder:text-[#8FAF9A]"
+                className="bg-transparent outline-none text-[0.82rem] w-44 placeholder:text-text-light"
                 style={{ color: AT.textDark }}
               />
             </div>
 
             {/* Notifications */}
             <button
-              className="relative w-10 h-10 rounded-2xl flex items-center justify-center border flex-shrink-0 hover:bg-[#F0F7F0] transition-colors"
+              className="relative w-10 h-10 rounded-2xl flex items-center justify-center border shrink-0 hover:bg-[#F0F7F0] transition-colors"
               style={{ borderColor: AT.border, background: "#fff" }}
             >
               <Bell className="w-5 h-5" style={{ color: AT.textDark }} />
@@ -303,7 +303,7 @@ export default function AdminDashboard() {
 
             {/* Admin avatar */}
             <div
-              className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-white text-sm flex-shrink-0 shadow"
+              className="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-white text-sm shrink-0 shadow"
               style={{ background: `linear-gradient(135deg, ${AT.primary}, ${AT.success})` }}
             >
               SA
@@ -361,7 +361,7 @@ export default function AdminDashboard() {
                     action={
                       <button
                         onClick={() => setCurrentPage("approvals")}
-                        className="text-[0.78rem] font-bold px-3 py-1.5 rounded-xl border hover:opacity-80 transition-opacity min-h-[36px]"
+                        className="text-[0.78rem] font-bold px-3 py-1.5 rounded-xl border hover:opacity-80 transition-opacity min-h-9"
                         style={{ borderColor: AT.success, color: AT.success, background: "#E6F4E610" }}
                       >
                         View all →
@@ -402,7 +402,7 @@ export default function AdminDashboard() {
                     action={
                       <button
                         onClick={() => setCurrentPage("pricing")}
-                        className="text-[0.78rem] font-bold px-3 py-1.5 rounded-xl border hover:opacity-80 transition-opacity min-h-[36px]"
+                        className="text-[0.78rem] font-bold px-3 py-1.5 rounded-xl border hover:opacity-80 transition-opacity min-h-9"
                         style={{ borderColor: AT.success, color: AT.success, background: "#E6F4E610" }}
                       >
                         Full engine →
@@ -433,7 +433,7 @@ export default function AdminDashboard() {
                     style={{ background: "#FFFBEE", borderColor: `${AT.gold}50` }}
                   >
                     <div
-                      className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0"
+                      className="w-9 h-9 rounded-2xl flex items-center justify-center shrink-0"
                       style={{ background: AT.gold }}
                     >
                       <UserCheck className="w-4 h-4 text-white" />
@@ -491,7 +491,7 @@ export default function AdminDashboard() {
                   style={{ background: "#EDF7ED", borderColor: `${AT.success}40` }}
                 >
                   <div
-                    className="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0"
+                    className="w-9 h-9 rounded-2xl flex items-center justify-center shrink-0"
                     style={{ background: AT.success }}
                   >
                     <TrendingUp className="w-4 h-4 text-white" />

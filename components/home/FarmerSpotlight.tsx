@@ -105,13 +105,7 @@ export default function FarmerSpotlight() {
               ))}
             </div>
 
-            <Link
-              href={`/farmers/${FEATURED_FARMER.id}`}
-              id="view-spotlight-farmer"
-              className="no-underline inline-flex items-center gap-2 bg-[#2D6A4F] text-white font-bold text-[0.95rem] px-8 py-3.5 rounded-full hover:bg-[#1B4332] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(45,106,79,0.3)] transition-all duration-200 self-start"
-            >
-              Visit Farm Profile →
-            </Link>
+            
           </div>
         </div>
       </div>
