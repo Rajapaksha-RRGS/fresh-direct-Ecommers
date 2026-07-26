@@ -74,14 +74,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           email: credentials?.email as string,
         }).select("+passwordHash");
 
-        if (!user) throw new Error("Invalid Email or Password");
-        if (!user.passwordHash) throw new Error("Password not set");
+        if (!user) return null;
+        if (!user.passwordHash) return null;
 
         const isValid = await bcrypt.compare(
           credentials.password as string,
           user.passwordHash,
         );
-        if (!isValid) throw new Error("Invalid Email or Password");
+        if (!isValid) return null;
 
         return {
           id: user._id.toString(),
