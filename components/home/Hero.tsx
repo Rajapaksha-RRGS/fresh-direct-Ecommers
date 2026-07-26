@@ -70,7 +70,7 @@ export default function Hero() {
             {/* CTAs */}
             <div className="flex gap-6 flex-wrap mb-12">
               <Link
-                href="/products"
+                href="/marketplace"
                 id="hero-shop-cta"
                 className="no-underline bg-[#FFB703] text-[#1A2E22] font-extrabold text-base px-9 py-4 rounded-full shadow-[0_8px_30px_rgba(255,183,3,0.35)] inline-flex items-center gap-2.5 hover:bg-[#E09F00] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(255,183,3,0.45)] transition-all duration-200 active:translate-y-0"
               >

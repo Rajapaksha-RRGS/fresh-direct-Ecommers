@@ -19,6 +19,10 @@ export interface IProduct extends Document {
   totalViews: number; // කී දෙනෙක් මේ භාණ්ඩය බැලුවාද?
   totalSold: number; // මේ දක්වා විකුණා ඇති මුළු ප්‍රමාණය
 
+  // --- NEW: Dynamic Pricing v2 Fields (additive, no breaking changes) ---
+  maxStockQty: number; // Reference ceiling used to derive supply % (default: 1000)
+  demandLevel: "High" | "Medium" | "Low"; // Cached/derived demand tier (default: "Medium")
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -95,6 +99,18 @@ const ProductSchema = new Schema<IProduct>(
     totalSold: {
       type: Number,
       default: 0,
+    },
+
+    // --- NEW: Dynamic Pricing v2 Fields ---
+    maxStockQty: {
+      type: Number,
+      default: 1000,
+      min: [1, "maxStockQty must be at least 1"],
+    },
+    demandLevel: {
+      type: String,
+      enum: ["High", "Medium", "Low"],
+      default: "Medium",
     },
   },
   {

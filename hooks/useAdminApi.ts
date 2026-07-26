@@ -16,8 +16,6 @@ import type {
   PricingConfigData,
 } from "@/types/adminApi";
 import type { PricingRow } from "@/types/admin";
-import type { GetPricingCalculateResponse } from "@/app/api/admin/pricing/calculate/route";
-
 // ─── Generic fetch hook ──────────────────────────────────────────────────────
 
 interface UseFetchState<T> {
@@ -109,7 +107,7 @@ export function useAnalytics() {
     };
 
     fetchAnalytics();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refetchKey]);
 
   /** Call this after any write operation to re-sync analytics from the DB. */
@@ -206,21 +204,21 @@ export function usePricingConfig() {
 }
 
 /**
- * Hook: Fetch live dynamic-pricing rows from /api/admin/pricing/calculate
+ * Hook: Fetch live dynamic-pricing rows from /api/pricing
  *
  * Returns all the usual data/loading/error fields PLUS a `refetch()` function.
- * Call `refetch()` after the admin tweaks sensitivity factors so the table
- * re-computes without a full page reload.
+ * Calling refetch() hits POST /api/pricing/refresh which:
+ *   1. Recalculates prices via the v2 engine
+ *   2. Persists currentPrice + demandLevel to MongoDB
+ *   3. Returns the updated rows so the UI refreshes immediately
  */
 export function usePricingCalculate() {
   const [state, setState] = useState<{
     data: PricingRow[] | null;
-    meta: GetPricingCalculateResponse["meta"] | null;
     loading: boolean;
     error: string | null;
   }>({
     data: null,
-    meta: null,
     loading: true,
     error: null,
   });
@@ -232,30 +230,27 @@ export function usePricingCalculate() {
       try {
         setState((prev) => ({ ...prev, loading: true, error: null }));
 
-        const res = await fetch("/api/admin/pricing/calculate");
+        // Initial load: use the GET endpoint (fast, no DB writes)
+        const res = await fetch("/api/pricing", { method: "GET" });
 
         if (!res.ok) {
           const err = await res.json();
           throw new Error(err.message || "Failed to fetch pricing data");
         }
 
-        const result: GetPricingCalculateResponse = await res.json();
+        const result: { success: boolean; data: PricingRow[] } = await res.json();
 
-        // Map API rows → PricingRow (UI type)
-        const rows: PricingRow[] = result.data.map((r) => ({
-          id:           r.id,
-          name:         r.name,
-          category:     r.category,
-          unit:         r.unit,
-          basePrice:    r.basePrice,
-          dynamicPrice: r.dynamicPrice,
-          supply:       r.supply,
-          supplyMax:    r.supplyMax,
-          supplyPct:    r.supplyPct,
-          demand:       r.demand,
-        }));
+        // Debug: check browser console to confirm API is returning data
+        console.log(
+          `[usePricingCalculate] GET /api/pricing → ${result.data?.length ?? 0} row(s)`,
+          result.data
+        );
 
-        setState({ data: rows, meta: result.meta, loading: false, error: null });
+        setState({
+          data: result.data,
+          loading: false,
+          error: null,
+        });
       } catch (err) {
         setState((prev) => ({
           ...prev,
@@ -269,7 +264,37 @@ export function usePricingCalculate() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refetchKey]);
 
-  const refetch = () => setRefetchKey((k) => k + 1);
+  /**
+   * Called by PricingConsole's "Refresh Prices" button.
+   * Hits POST /api/pricing/refresh to persist new prices then updates UI.
+   * Does NOT trigger `loading: true` so the PricingConsole remains mounted,
+   * showing its own spinning animation instead of jarringly showing a loading skeleton.
+   */
+  const refetch = async () => {
+    try {
+      setState((prev) => ({ ...prev, error: null }));
+
+      const res = await fetch("/api/pricing/refresh", { method: "POST" });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Failed to refresh pricing data");
+      }
+
+      const result: { success: boolean; data: PricingRow[] } = await res.json();
+
+      setState({
+        data: result.data,
+        loading: false,
+        error: null,
+      });
+    } catch (err) {
+      setState((prev) => ({
+        ...prev,
+        error: err instanceof Error ? err.message : "Unknown error",
+      }));
+    }
+  };
 
   return { ...state, refetch };
 }

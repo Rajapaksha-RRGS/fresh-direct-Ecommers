@@ -1,8 +1,53 @@
+"use client";
+
 import Link from "next/link";
-import ProductCard from "@/components/product/ProductCard";
-import { FEATURED_PRODUCTS } from "./data";
+import { useEffect, useState } from "react";
+import ProductCard, { ProductCardProps } from "@/components/product/ProductCard";
 
 export default function FeaturedMarketplace() {
+  const [products, setProducts] = useState<ProductCardProps[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/product");
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        console.error("Error fetching featured products:", err);
+        setError("Failed to fetch featured products");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="text-center py-12 text-[#2D6A4F] font-semibold">
+        Loading Featured Products... 🌾
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12 text-red-500 font-medium">
+        {error}
+      </div>
+    );
+  }
+
   return (
     <section id="marketplace" className="py-12 lg:py-20 px-6 bg-white">
       <div className="max-w-7xl mx-auto px-6 w-full">
@@ -22,7 +67,7 @@ export default function FeaturedMarketplace() {
             </p>
           </div>
           <Link
-            href="/products"
+            href="/marketplace"
             id="see-all-products"
             className="no-underline font-bold text-[0.9rem] text-[#2D6A4F] border-2 border-[#2D6A4F] px-7 py-3 rounded-full whitespace-nowrap hover:bg-[#2D6A4F] hover:text-white hover:-translate-y-0.5 transition-all duration-200"
           >
@@ -31,9 +76,20 @@ export default function FeaturedMarketplace() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {FEATURED_PRODUCTS.map((product) => (
-            <ProductCard key={product.id} {...product} />
-          ))}
+          {products.length === 0 ? (
+            <div className="col-span-full text-center py-16">
+              <p className="text-[#1A3020] font-bold text-[1rem] mb-2">
+                No featured products available
+              </p>
+              <p className="text-[#6B8F6E] text-[0.85rem]">
+                Please check back later for fresh produce!
+              </p>
+            </div>
+          ) : (
+            products.map((product) => (
+              <ProductCard key={product.id} {...product} />
+            ))
+          )}
         </div>
       </div>
     </section>

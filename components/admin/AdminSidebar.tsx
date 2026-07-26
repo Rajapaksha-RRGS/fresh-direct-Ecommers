@@ -33,7 +33,7 @@ export default function AdminSidebar({
   const panel = (
     <div
       className={cn(
-        "flex flex-col h-screen  transition-all duration-300 ease-in-out rounded-3xl shadow-2xl overflow-hidden",
+        "flex flex-col h-full transition-all duration-300 ease-in-out rounded-3xl shadow-2xl overflow-hidden",
         collapsed ? "w-[72px]" : "w-64",
       )}
       style={{
@@ -242,7 +242,7 @@ export default function AdminSidebar({
   return (
     <>
       {/* Desktop */}
-      <div className="hidden lg:flex flex-col h-full m-3 mr-0">{panel}</div>
+      <div className="hidden lg:flex flex-col h-full m-3 mr-0 overflow-hidden">{panel}</div>
 
       {/* Mobile overlay */}
       {mobileOpen && (

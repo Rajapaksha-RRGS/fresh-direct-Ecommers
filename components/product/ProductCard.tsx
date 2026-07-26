@@ -1,6 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useCallback } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { ShoppingCart, Package } from "lucide-react";
+import { useCartStore } from "@/store/cartStore";
 
 // ─── Types matching the Product Mongoose model ────────────────────────────────
 export interface ProductCardProps {
@@ -10,14 +15,16 @@ export interface ProductCardProps {
   currentPrice: number;       // Dynamic price adjusted by demandFactor
   basePrice: number;
   demandFactor?: number;      // > 1 = high demand, < 1 = low demand
+  demandScore?: number;       // alt. demand signal (views/interactions) — shows 🔥 HOT if > 10
   unit: string;
   image: string;
-  harvestDate: string;        // ISO date string
+  harvestDate?: string;       // ISO date string — line hidden if not provided
   farmerId: string;
   farmerName: string;
-  farmLocation: string;
+  farmLocation?: string;      // line hidden if not provided
   stockQty: number;
   isOrganic?: boolean;
+  onView?: (id: string) => void; // optional demand/view tracking callback
 }
 
 function getDemandBadge(factor?: number) {
@@ -27,32 +34,55 @@ function getDemandBadge(factor?: number) {
   return null;
 }
 
-function formatHarvestDate(isoDate: string) {
-  const d = new Date(isoDate);
-  const now = new Date();
-  const diffMs = now.getTime() - d.getTime();
-  const diffH = Math.floor(diffMs / (1000 * 60 * 60));
-  if (diffH < 24) return `Harvested ${diffH}h ago`;
-  const diffD = Math.floor(diffH / 24);
-  return `Harvested ${diffD} day${diffD !== 1 ? "s" : ""} ago`;
-}
-
 export default function ProductCard({
-  id, name, category, currentPrice, basePrice, demandFactor,
-  unit, image, harvestDate, farmerId, farmerName, farmLocation,
-  stockQty, isOrganic,
+  id, name, category, currentPrice, basePrice, demandFactor, demandScore,
+  unit, image, farmerId, farmerName,
+  stockQty, isOrganic, onView,
 }: ProductCardProps) {
+  const { addItem, openDrawer } = useCartStore();
+  const [adding, setAdding] = useState(false);
+  const { status } = useSession();
+  const router = useRouter();
+  const pathname = usePathname();
+
   const demandBadge = getDemandBadge(demandFactor);
+  const isHot = (demandScore ?? 0) > 10;
   const priceChanged = currentPrice !== basePrice;
   const priceUp = currentPrice > basePrice;
+  const inStock = stockQty > 0;
 
+  const handleAddToCart = useCallback(() => {
+    if (adding || !inStock) return;
+
+    // ── Not signed in → redirect to login, come back to this page after ──
+    if (status !== "authenticated") {
+      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
+      return;
+    }
+
+    setAdding(true);
+    addItem({
+      id,
+      name,
+      farmerName,
+      unit,
+      currentPrice,
+      image,
+    });
+    openDrawer();
+    setTimeout(() => setAdding(false), 700);
+  }, [adding, inStock, status, router, pathname, addItem, openDrawer, id, name, farmerName, unit, currentPrice, image]);
   return (
     <article
       id={`product-card-${id}`}
       className="group bg-white rounded-[22px] overflow-hidden shadow-[0_4px_20px_rgba(45,106,79,0.06)] border border-[#D0EDD8] transition-all duration-300 flex flex-col hover:-translate-y-2 hover:shadow-[0_16px_48px_rgba(45,106,79,0.16)]"
     >
       {/* Image Section */}
-      <div className="relative h-[210px] bg-[#F0FBF1] overflow-hidden">
+      <Link
+        href={`/products/${id}`}
+        onClick={() => onView?.(id)}
+        className="relative block h-[140px] bg-[#F0FBF1] overflow-hidden"
+      >
         <img
           src={image}
           alt={name}
@@ -74,78 +104,104 @@ export default function ProductCard({
               {demandBadge.label}
             </span>
           )}
+          {isHot && !demandBadge && (
+            <span className="bg-[#FFF0EA] text-[#FF6B35] text-[0.7rem] font-bold px-3 py-1 rounded-full shadow-sm">
+              🔥 HOT
+            </span>
+          )}
         </div>
 
+        {/* Out of Stock overlay */}
+        {!inStock && (
+          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+            <span className="bg-white text-[#1A2E22] text-[0.75rem] font-bold px-3 py-1.5 rounded-full">
+              Out of Stock
+            </span>
+          </div>
+        )}
+
         {/* Stock Warning */}
-        {stockQty <= 5 && stockQty > 0 && (
+        {inStock && stockQty <= 5 && (
           <span className="absolute bottom-3 right-3 bg-[rgba(255,107,53,0.92)] backdrop-blur-sm text-white text-[0.72rem] font-bold px-3 py-1 rounded-full shadow-sm">
             Only {stockQty} left!
           </span>
         )}
-      </div>
+      </Link>
 
       {/* Content */}
-      <div className="p-6 flex flex-col gap-3.5 flex-1">
-        {/* Category + Harvest */}
-        <div className="flex justify-between items-center">
-          <span className="text-[0.72rem] font-semibold text-[#2D6A4F] uppercase tracking-[0.1em] bg-[#F0FBF1] px-2.5 py-0.5 rounded-md">
-            {category}
-          </span>
-          <span className="text-[0.72rem] text-[#8FAF9A] flex items-center gap-1">
-            🕐 {formatHarvestDate(harvestDate)}
-          </span>
-        </div>
+      <div className="p-3.5 flex flex-col gap-1.5 flex-1">
+        {/* Category */}
+        <span className="self-start text-[0.62rem] font-semibold text-[#2D6A4F] uppercase tracking-[0.08em] bg-[#F0FBF1] px-2 py-0.5 rounded-md">
+          {category}
+        </span>
 
         {/* Product Name */}
         <h3
-          className="text-[1.15rem] font-bold text-[#1A2E22] leading-snug m-0"
+          className="text-[0.92rem] font-bold text-[#1A2E22] leading-tight m-0 line-clamp-1"
           style={{ fontFamily: "var(--font-serif)" }}
         >
           {name}
         </h3>
 
-        {/* Farmer Info — Links to FarmerProfile */}
-        <Link
-          href={`/farmers/${farmerId}`}
-          className="no-underline flex items-center gap-2 group/farmer"
-        >
-          <div className="w-[24px] h-[24px] rounded-full bg-[#D8F3DC] flex items-center justify-center text-[0.75rem] flex-shrink-0">
-            👨‍🌾
-          </div>
-          <div>
-            <p className="text-[0.8rem] font-semibold text-[#2D6A4F] m-0 group-hover/farmer:text-[#1B4332] transition-colors">{farmerName}</p>
-            <p className="text-[0.72rem] text-[#8FAF9A] m-0">📍 {farmLocation}</p>
-          </div>
-        </Link>
+        {/* Farmer + stock (single compact row) */}
+        <div className="flex items-center justify-between gap-2">
+          <Link
+            href={`/farmers/${farmerId}`}
+            onClick={() => onView?.(id)}
+            className="no-underline text-[0.7rem] font-semibold text-[#2D6A4F] hover:text-[#1B4332] transition-colors truncate"
+          >
+            👨‍🌾 {farmerName}
+          </Link>
+          <span className="flex items-center gap-1 text-[0.65rem] text-[#8FAF9A] flex-shrink-0">
+            <Package className="w-2.5 h-2.5" />
+            {inStock ? stockQty : "0"}
+          </span>
+        </div>
 
         {/* Dynamic Price */}
-        <div className="flex items-end gap-2 mt-auto pt-2">
+        <div className="flex items-end gap-1.5 mt-auto pt-1">
           <span
-            className="text-[1.45rem] font-extrabold text-[#2D6A4F]"
+            className="text-[1.1rem] font-extrabold text-[#2D6A4F]"
             style={{ fontFamily: "var(--font-serif)" }}
           >
             Rs. {currentPrice.toFixed(2)}
           </span>
-          <span className="text-[0.8rem] text-[#8FAF9A] mb-0.5">/ {unit}</span>
+          <span className="text-[0.7rem] text-[#8FAF9A] mb-0.5">/ {unit}</span>
           {priceChanged && (
             <span
-              className={`text-[0.72rem] font-bold px-2 py-0.5 rounded-full mb-0.5 ${
+              className={`text-[0.6rem] font-bold px-1.5 py-0.5 rounded-full mb-0.5 ml-auto ${
                 priceUp
                   ? "text-[#FF6B35] bg-[#FFF0EA]"
                   : "text-[#2D6A4F] bg-[#D8F3DC]"
               }`}
             >
-              {priceUp ? "▲" : "▼"} vs base
+              {priceUp ? "▲" : "▼"}
             </span>
           )}
         </div>
 
         {/* Add to Cart CTA */}
         <button
-          id={`add-to-cart-${id}`}
-          className="w-full py-3.5 bg-gradient-to-r from-[#2D6A4F] to-[#52B788] text-white border-none rounded-xl font-bold text-[0.9rem] cursor-pointer transition-all duration-300 tracking-[0.02em] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(45,106,79,0.35)] active:translate-y-0"
+          disabled={!inStock || adding}
+          onClick={handleAddToCart}
+          className="w-full mt-1"
         >
-          Add to Cart 🛒
+          <span
+            className={`w-full flex items-center justify-center gap-1.5 text-center text-[0.78rem] font-bold px-4 py-2 rounded-full transition-colors ${
+              inStock && !adding
+                ? "text-white bg-[#2D6A4F] hover:bg-[#1B4332]"
+                : "text-[#8FAF9A] bg-[#F0FBF1] cursor-not-allowed"
+            }`}
+          >
+            {adding ? (
+              "Added! ✓"
+            ) : (
+              <>
+                <ShoppingCart className="w-3.5 h-3.5" />
+                {inStock ? "Add to Cart" : "Unavailable"}
+              </>
+            )}
+          </span>
         </button>
       </div>
     </article>
