@@ -47,8 +47,9 @@ export default function ProductCard({
 
   const demandBadge = getDemandBadge(demandFactor);
   const isHot = (demandScore ?? 0) > 10;
-  const priceChanged = currentPrice !== basePrice;
+  const priceChanged = basePrice != null && basePrice > 0 && Math.abs(currentPrice - basePrice) > 0.01;
   const priceUp = currentPrice > basePrice;
+  const diffPercent = basePrice && basePrice > 0 ? Math.round(Math.abs((currentPrice - basePrice) / basePrice) * 100) : 0;
   const inStock = stockQty > 0;
 
   const handleAddToCart = useCallback(() => {
@@ -160,23 +161,33 @@ export default function ProductCard({
         </div>
 
         {/* Dynamic Price */}
-        <div className="flex items-end gap-1.5 mt-auto pt-1">
+        <div className="flex items-baseline gap-1.5 flex-wrap mt-auto pt-1">
           <span
             className="text-[1.1rem] font-extrabold text-[#2D6A4F]"
             style={{ fontFamily: "var(--font-serif)" }}
           >
             Rs. {currentPrice.toFixed(2)}
           </span>
+
+          {priceChanged && (
+            <span className="text-[0.78rem] line-through text-[#8FAF9A] font-semibold">
+              Rs. {basePrice.toFixed(2)}
+            </span>
+          )}
+
           <span className="text-[0.7rem] text-[#8FAF9A] mb-0.5">/ {unit}</span>
+
           {priceChanged && (
             <span
-              className={`text-[0.6rem] font-bold px-1.5 py-0.5 rounded-full mb-0.5 ml-auto ${
+              className={`text-[0.62rem] font-extrabold px-2 py-0.5 rounded-full ml-auto ${
                 priceUp
                   ? "text-[#FF6B35] bg-[#FFF0EA]"
                   : "text-[#2D6A4F] bg-[#D8F3DC]"
               }`}
             >
-              {priceUp ? "▲" : "▼"}
+              {priceUp
+                ? `▲ ${diffPercent > 0 ? `+${diffPercent}%` : "Demand"}`
+                : `▼ ${diffPercent > 0 ? `${diffPercent}% OFF` : "Deal"}`}
             </span>
           )}
         </div>

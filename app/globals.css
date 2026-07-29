@@ -35,21 +35,16 @@
   html {
     @apply scroll-smooth;
     -webkit-text-size-adjust: 100%;
+    overflow-y: auto;
   }
 
   body {
-    @apply font-sans bg-white text-[#1A2E22] leading-[1.7] overflow-x-hidden min-h-screen flex flex-col;
+    @apply font-sans bg-[#F0F7F0] text-[#1A2E22] leading-[1.7];
   }
 
-  /* Dashboard pages need h-screen + overflow-hidden on the root node,
-     so we must neutralise the body min-h-screen flex behaviour per-use. */
+  /* Dashboard pages need h-screen + overflow-hidden on the root node */
   body:has(.dashboard-root) {
     @apply h-screen overflow-hidden;
-  }
-
-  body > main,
-  body > div {
-    @apply flex-1;
   }
 
   a, button {
