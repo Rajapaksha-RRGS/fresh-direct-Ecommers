@@ -1,6 +1,6 @@
 "use client";
 
-import { TrendingUp, ShoppingBag, Wallet, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react";
 
 interface StatCard {
   label: string;
@@ -29,22 +29,22 @@ const T = {
 
 export default function StatCards({ cards }: StatCardsProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
       {cards.map((card, i) => {
         const Icon = card.icon;
         return (
           <div
             key={i}
-            className="rounded-3xl p-5 flex flex-col gap-4 hover:-translate-y-1 transition-all duration-300 cursor-default relative overflow-hidden"
+            className="rounded-3xl p-6 sm:p-7 flex flex-col gap-4 hover:-translate-y-1 transition-all duration-300 cursor-default relative overflow-hidden"
             style={{
               background: T.cardBg,
               border: `1.5px solid ${T.border}`,
-              boxShadow: "0 4px 20px rgba(26,48,32,0.07)",
+              boxShadow: "0 6px 24px rgba(26,48,32,0.08)",
             }}
           >
             {card.badge && (
               <span
-                className="absolute top-4 right-4 text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
+                className="absolute top-5 right-5 text-xs font-extrabold px-3 py-1 rounded-full text-white tracking-wider"
                 style={{ background: "#2C4DA0" }}
               >
                 {card.badge}
@@ -52,15 +52,15 @@ export default function StatCards({ cards }: StatCardsProps) {
             )}
 
             <div
-              className="w-11 h-11 rounded-2xl flex items-center justify-center"
+              className="w-14 h-14 rounded-2xl flex items-center justify-center"
               style={{ background: `${card.accent}18` }}
             >
-              <Icon className="w-5 h-5" style={{ color: card.accent }} />
+              <Icon className="w-7 h-7" style={{ color: card.accent }} />
             </div>
 
             <div>
               <p
-                className="font-extrabold text-2xl leading-tight"
+                className="font-black text-3xl sm:text-4xl leading-tight"
                 style={{
                   color:
                     card.accent === T.gold ? T.gold : T.textDark,
@@ -68,23 +68,23 @@ export default function StatCards({ cards }: StatCardsProps) {
               >
                 {card.value}
               </p>
-              <p className="text-sm font-semibold mt-0.5" style={{ color: T.textMid }}>
+              <p className="text-base font-extrabold mt-1" style={{ color: T.textMid }}>
                 {card.label}
               </p>
-              <p className="text-xs mt-0.5" style={{ color: T.textLight }}>
+              <p className="text-sm font-semibold mt-0.5" style={{ color: T.textLight }}>
                 {card.sublabel}
               </p>
             </div>
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5 pt-1">
               {card.positive === true && (
-                <ArrowUpRight className="w-3.5 h-3.5" style={{ color: T.success }} />
+                <ArrowUpRight className="w-4 h-4" style={{ color: T.success }} />
               )}
               {card.positive === false && (
-                <ArrowDownRight className="w-3.5 h-3.5 text-red-500" />
+                <ArrowDownRight className="w-4 h-4 text-red-500" />
               )}
               <span
-                className="text-xs font-semibold"
+                className="text-sm font-bold"
                 style={{
                   color:
                     card.positive === true

@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
 
       orderItems.push({
         productId: product._id,
-        farmerId: item.farmerId,
+        farmerId: product.farmerId || item.farmerId,
         name: item.name,
         image: item.image,
         unitPrice: item.unitPrice,
@@ -81,5 +81,33 @@ export async function POST(req: NextRequest) {
         error: "Failed to place order.",
         details: err.message // මේකෙන් error එකේ විස්තරය response එකේම එවයි
     }, { status: 500 });
+  }
 }
+
+export async function GET(req: NextRequest) {
+  try {
+    const session = await auth();
+
+    if (!session || !session.user || !session.user.id) {
+      return NextResponse.json(
+        { error: "Unauthorized. Please log in to view orders." },
+        { status: 401 }
+      );
+    }
+
+    await connectDB();
+
+    const orders = await Order.find({ customerId: session.user.id })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return NextResponse.json({ success: true, orders }, { status: 200 });
+  } catch (err: any) {
+    console.error("GET orders error:", err);
+    return NextResponse.json(
+      { error: "Failed to fetch orders.", details: err.message },
+      { status: 500 }
+    );
+  }
 }
+

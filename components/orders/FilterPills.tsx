@@ -1,11 +1,9 @@
 "use client";
 
-type CropStatus = "Ready" | "Processing" | "Harvesting" | "Cancelled";
-
 interface FilterPillsProps {
-  statuses: ("All" | CropStatus)[];
-  activeFilter: "All" | CropStatus;
-  onFilterChange: (status: "All" | CropStatus) => void;
+  statuses: string[];
+  activeFilter: string;
+  onFilterChange: (status: string) => void;
 }
 
 const T = {
@@ -21,21 +19,21 @@ export default function FilterPills({
   onFilterChange,
 }: FilterPillsProps) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2 overflow-x-auto pb-1">
       {statuses.map((status) => {
         const active = activeFilter === status;
         return (
           <button
             key={status}
             onClick={() => onFilterChange(status)}
-            className="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 min-h-[40px]"
+            className="px-5 py-2.5 rounded-2xl text-sm font-extrabold transition-all duration-200 min-h-[42px] capitalize shadow-sm hover:scale-105"
             style={{
               background: active ? T.success : T.cardBg,
               color: active ? "white" : T.textMid,
               border: `1.5px solid ${active ? T.success : T.border}`,
             }}
           >
-            {status}
+            {status.toLowerCase()}
           </button>
         );
       })}

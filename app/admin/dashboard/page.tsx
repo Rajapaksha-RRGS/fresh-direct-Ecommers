@@ -312,12 +312,12 @@ export default function AdminDashboard() {
 
           {/* ── Scrollable content area (ONLY this scrolls) ───────────────── */}
           <main
-            className="flex-1 overflow-y-auto p-6"
+            className="flex-1 overflow-y-auto p-5 sm:p-6 w-full max-w-none"
             style={{ background: AT.bg }}
           >
             {/* ════════════════ OVERVIEW / DASHBOARD ════════════════════════ */}
             {currentPage === "dashboard" && (
-              <div className="flex flex-col gap-6 max-w-7xl mx-auto">
+              <div className="flex flex-col gap-6 w-full">
 
                 {/* Welcome strip */}
                 <div
@@ -426,7 +426,7 @@ export default function AdminDashboard() {
 
             {/* ════════════════ FARMER APPROVALS ════════════════════════ */}
             {currentPage === "approvals" && (
-              <div className="max-w-5xl mx-auto">
+              <div className="w-full space-y-6">
                 {pendingFarmers.data && pendingFarmers.data.length > 0 && (
                   <div
                     className="rounded-3xl p-4 mb-6 flex items-center gap-3 border shadow-[0_4px_16px_rgba(242,180,65,0.15)]"
@@ -485,7 +485,7 @@ export default function AdminDashboard() {
 
             {/* ════════════════ PRICING ENGINE ══════════════════════════ */}
             {currentPage === "pricing" && (
-              <div className="max-w-5xl mx-auto">
+              <div className="w-full space-y-6">
                 <div
                   className="rounded-3xl p-4 mb-6 flex items-center gap-3 border"
                   style={{ background: "#EDF7ED", borderColor: `${AT.success}40` }}
@@ -525,7 +525,7 @@ export default function AdminDashboard() {
 
             {/* ════════════════ ORDERS ══════════════════════════════════ */}
             {currentPage === "orders" && (
-              <div className="max-w-5xl mx-auto">
+              <div className="w-full">
                 <Section title="Active Orders" icon={ShoppingBag}>
                   <ComingSoon label="Active Orders Module" />
                 </Section>
@@ -534,7 +534,7 @@ export default function AdminDashboard() {
 
             {/* ════════════════ USERS ═══════════════════════════════════ */}
             {currentPage === "users" && (
-              <div className="max-w-5xl mx-auto">
+              <div className="w-full">
                 <Section title="User Management" icon={Users}>
                   <ComingSoon label="User Management Module" />
                 </Section>

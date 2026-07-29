@@ -27,7 +27,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="antialiased" h-full overflow-hidden suppressHydrationWarning>
+      <body className="antialiased h-full overflow-hidden" suppressHydrationWarning>
         <Providers>{children}</Providers>
       </body>
     </html>
