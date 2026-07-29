@@ -299,6 +299,7 @@ export default function MarketplacePage() {
                 currentPrice={product.currentPrice}
                 basePrice={product.basePrice}
                 demandScore={product.demandScore}
+                demandFactor={(product as any).demandFactor}
                 unit={product.unit}
                 image={product.images?.[0] ?? ""}
                 farmerId={product.farmerId?._id ?? "#"}
