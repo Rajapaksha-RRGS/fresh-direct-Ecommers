@@ -65,6 +65,7 @@ export default function ProductCard({
       id,
       name,
       farmerName,
+      farmerId,
       unit,
       currentPrice,
       image,

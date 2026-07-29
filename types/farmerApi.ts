@@ -105,6 +105,9 @@ export interface IProductsListResponse {
 export interface IOrderItem {
   productId: string;
   farmerId: string;
+  name?: string;
+  image?: string;
+  unit?: string;
   quantity: number;
   unitPrice: number;
   subtotal: number;
@@ -119,6 +122,13 @@ export interface IOrderResponse {
   items: IOrderItem[];
   totalAmount: number;
   status: "PENDING" | "CONFIRMED" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+  deliveryAddress?: {
+    fullName: string;
+    phone: string;
+    street: string;
+    city: string;
+    postalCode?: string;
+  };
   createdAt: string;
   updatedAt: string;
 }

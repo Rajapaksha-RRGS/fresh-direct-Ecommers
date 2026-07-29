@@ -57,12 +57,16 @@ export async function GET(request: NextRequest) {
         items: farmerItems.map((item: any) => ({
           productId: item.productId?.toString() || "",
           farmerId: item.farmerId?.toString() || "",
+          name: item.name || "Product",
+          image: item.image || "",
+          unit: item.unit || "kg",
           quantity: item.quantity || 0,
           unitPrice: item.unitPrice || 0,
           subtotal: item.subtotal || 0,
         })),
         totalAmount: farmerItems.reduce((sum: number, item: any) => sum + (item.subtotal || 0), 0),
         status: order.status as any,
+        deliveryAddress: order.deliveryAddress,
         createdAt: order.createdAt?.toISOString() || new Date().toISOString(),
         updatedAt: order.updatedAt?.toISOString() || new Date().toISOString(),
       };

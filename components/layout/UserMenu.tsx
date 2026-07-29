@@ -43,7 +43,7 @@ const MENU_ITEMS = [
   },
   {
     label: "My Orders",
-    href: "/orders",
+    href: "/my-orders",
     icon: ShoppingBag,
     roles: ["CUSTOMER", "FARMER", "ADMIN"],
     color: "#1A3020",

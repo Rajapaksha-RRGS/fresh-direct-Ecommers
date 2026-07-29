@@ -61,7 +61,7 @@ export default function FarmerDashboard() {
         />
 
         {/* Only this element scrolls — Header stays fixed relative to its container */}
-        <main className="flex-1 overflow-y-auto dashboard-scroll p-3 pt-4 pb-8">
+        <main className="flex-1 overflow-y-auto dashboard-scroll p-5 w-full max-w-none space-y-6">
           {renderPage(currentPage)}
         </main>
       </div>

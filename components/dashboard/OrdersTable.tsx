@@ -1,21 +1,10 @@
 "use client";
 
-import { CheckCircle2, Loader2, RefreshCw, AlertCircle } from "lucide-react";
-
-type CropStatus = "Ready" | "Processing" | "Harvesting" | "Cancelled";
-
-interface Order {
-  id: string;
-  crop: string;
-  weight: string;
-  buyer: string;
-  date: string;
-  amount: number;
-  status: CropStatus;
-}
+import React from "react";
+import { Package } from "lucide-react";
 
 interface OrdersTableProps {
-  orders: Order[];
+  orders: any[];
   title?: string;
   subtitle?: string;
   showViewAll?: boolean;
@@ -32,33 +21,56 @@ const T = {
 } as const;
 
 const STATUS_CFG: Record<
-  CropStatus,
+  string,
   { bg: string; text: string; dot: string }
 > = {
+  PENDING: { bg: "bg-[#FEF3CD]", text: "text-[#7D5A00]", dot: "bg-[#F2B441]" },
+  CONFIRMED: { bg: "bg-[#E6F4E6]", text: "text-[#2A6B1E]", dot: "bg-[#3E7B27]" },
+  PROCESSING: { bg: "bg-[#FEF3CD]", text: "text-[#7D5A00]", dot: "bg-[#F2B441]" },
+  SHIPPED: { bg: "bg-[#E8F0FF]", text: "text-[#2C4DA0]", dot: "bg-[#4A6FDB]" },
+  DELIVERED: { bg: "bg-[#E6F4E6]", text: "text-[#2A6B1E]", dot: "bg-[#3E7B27]" },
+  CANCELLED: { bg: "bg-[#FEE8E8]", text: "text-[#8B1C1C]", dot: "bg-[#D94040]" },
   Ready: { bg: "bg-[#E6F4E6]", text: "text-[#2A6B1E]", dot: "bg-[#3E7B27]" },
-  Processing: {
-    bg: "bg-[#FEF3CD]",
-    text: "text-[#7D5A00]",
-    dot: "bg-[#F2B441]",
-  },
-  Harvesting: {
-    bg: "bg-[#E8F0FF]",
-    text: "text-[#2C4DA0]",
-    dot: "bg-[#4A6FDB]",
-  },
-  Cancelled: { bg: "bg-[#FEE8E8]", text: "text-[#8B1C1C]", dot: "bg-[#D94040]" },
+  Harvesting: { bg: "bg-[#E8F0FF]", text: "text-[#2C4DA0]", dot: "bg-[#4A6FDB]" },
 };
 
 function cn(...classes: (string | boolean | undefined | null)[]): string {
   return classes.filter(Boolean).join(" ");
 }
 
+function fmt(n: number) {
+  return new Intl.NumberFormat("si-LK", {
+    style: "currency",
+    currency: "LKR",
+    minimumFractionDigits: 0,
+  }).format(n);
+}
+
 export default function OrdersTable({
   orders,
-  title = "Active Orders",
-  subtitle = "Recent orders",
+  title = "Recent Produce Orders",
+  subtitle = "Latest orders containing your crops",
   showViewAll = true,
 }: OrdersTableProps) {
+  if (!orders || orders.length === 0) {
+    return (
+      <div
+        className="rounded-3xl p-8 text-center"
+        style={{
+          background: T.cardBg,
+          border: `1.5px solid ${T.border}`,
+          boxShadow: "0 4px 20px rgba(26,48,32,0.07)",
+        }}
+      >
+        <Package className="w-8 h-8 text-[#6B8F6E] mx-auto mb-2 opacity-60" />
+        <h3 className="font-bold text-sm text-[#1A3020]">No Recent Orders</h3>
+        <p className="text-xs text-[#6B8F6E] mt-0.5">
+          New customer orders for your produce will appear here automatically.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div
       className="rounded-3xl overflow-hidden"
@@ -86,27 +98,22 @@ export default function OrdersTable({
             {subtitle}
           </p>
         </div>
-        {showViewAll && (
-          <button
-            className="text-xs font-bold px-4 py-2 rounded-xl transition-all duration-200 hover:opacity-80 min-h-[36px]"
-            style={{
-              background: `${T.success}12`,
-              color: T.success,
-              border: `1.5px solid ${T.success}30`,
-            }}
-          >
-            View All
-          </button>
-        )}
       </div>
 
-      {/* Mobile stacked */}
+      {/* Mobile stacked view */}
       <div className="sm:hidden divide-y" style={{ borderColor: T.border }}>
-        {orders.map((order) => {
-          const sc = STATUS_CFG[order.status];
+        {orders.map((order, idx) => {
+          const statusKey = order.status || "PENDING";
+          const sc = STATUS_CFG[statusKey] || STATUS_CFG.PENDING;
+          const cropName =
+            order.crop ||
+            order.items?.[0]?.name ||
+            `Order #${order.orderId || (order.id ? order.id.slice(-6) : idx + 1)}`;
+          const totalAmt = typeof order.totalAmount === "number" ? order.totalAmount : order.amount || 0;
+
           return (
             <div
-              key={order.id}
+              key={order.id || order.orderId || idx}
               className="px-4 py-4 flex items-center justify-between gap-3"
             >
               <div className="flex-1 min-w-0">
@@ -114,10 +121,10 @@ export default function OrdersTable({
                   className="font-bold text-sm truncate"
                   style={{ color: T.textDark }}
                 >
-                  {order.crop}
+                  {cropName}
                 </p>
                 <p className="text-xs mt-0.5" style={{ color: T.textLight }}>
-                  {order.weight} · {order.id}
+                  {order.deliveryAddress?.fullName || order.buyer || "Customer"} · {fmt(totalAmt)}
                 </p>
               </div>
               <span
@@ -128,7 +135,7 @@ export default function OrdersTable({
                 )}
               >
                 <span className={cn("w-1.5 h-1.5 rounded-full", sc.dot)} />
-                {order.status}
+                {statusKey}
               </span>
             </div>
           );
@@ -140,7 +147,7 @@ export default function OrdersTable({
         <table className="w-full text-sm">
           <thead>
             <tr style={{ borderBottom: `1.5px solid ${T.border}` }}>
-              {["Crop Name", "Weight", "Buyer", "Date", "Total", "Status"].map(
+              {["Produce / Crop", "Qty / Weight", "Buyer / Customer", "Date", "Total Amount", "Status"].map(
                 (h) => (
                   <th
                     key={h}
@@ -154,11 +161,33 @@ export default function OrdersTable({
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => {
-              const sc = STATUS_CFG[order.status];
+            {orders.map((order, idx) => {
+              const statusKey = order.status || "PENDING";
+              const sc = STATUS_CFG[statusKey] || STATUS_CFG.PENDING;
+              const cropName =
+                order.crop ||
+                order.items?.[0]?.name ||
+                `Order #${order.orderId || (order.id ? order.id.slice(-6) : idx + 1)}`;
+              const weightStr =
+                order.weight ||
+                (order.items
+                  ? `${order.items.reduce((s: number, i: any) => s + (i.quantity || 1), 0)} ${order.items[0]?.unit || "units"}`
+                  : "1 unit");
+              const buyerName =
+                order.deliveryAddress?.fullName ||
+                order.buyer ||
+                "Customer";
+              const dateStr = order.createdAt
+                ? new Date(order.createdAt).toLocaleDateString("en-LK", {
+                    day: "2-digit",
+                    month: "short",
+                  })
+                : order.date || "Recently";
+              const totalAmt = typeof order.totalAmount === "number" ? order.totalAmount : order.amount || 0;
+
               return (
                 <tr
-                  key={order.id}
+                  key={order.id || order.orderId || idx}
                   className="transition-colors duration-150"
                   style={{ borderBottom: `1px solid ${T.border}40` }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = `${T.bg}80`)}
@@ -168,34 +197,31 @@ export default function OrdersTable({
                     className="px-5 py-3.5 font-bold text-sm whitespace-nowrap"
                     style={{ color: T.textDark }}
                   >
-                    {order.crop}
+                    {cropName}
                   </td>
                   <td
                     className="px-5 py-3.5 font-semibold text-sm whitespace-nowrap"
                     style={{ color: T.textMid }}
                   >
-                    {order.weight}
+                    {weightStr}
                   </td>
                   <td
                     className="px-5 py-3.5 text-sm whitespace-nowrap"
                     style={{ color: T.textMid }}
                   >
-                    {order.buyer}
+                    {buyerName}
                   </td>
                   <td
                     className="px-5 py-3.5 text-xs whitespace-nowrap"
                     style={{ color: T.textLight }}
                   >
-                    {new Date(order.date).toLocaleDateString("en-LK", {
-                      day: "2-digit",
-                      month: "short",
-                    })}
+                    {dateStr}
                   </td>
                   <td
                     className="px-5 py-3.5 font-extrabold text-sm whitespace-nowrap"
                     style={{ color: T.textDark }}
                   >
-                    Rs.&nbsp;{order.amount.toLocaleString()}
+                    {fmt(totalAmt)}
                   </td>
                   <td className="px-5 py-3.5">
                     <span
@@ -206,7 +232,7 @@ export default function OrdersTable({
                       )}
                     >
                       <span className={cn("w-1.5 h-1.5 rounded-full flex-shrink-0", sc.dot)} />
-                      {order.status}
+                      {statusKey}
                     </span>
                   </td>
                 </tr>
